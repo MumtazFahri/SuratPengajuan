@@ -1,0 +1,19 @@
+🚀 Starting WhatsApp Server...
+
+🌐 Server berjalan di port 3000
+📡 Web Interface: http://localhost:3000
+📡 API Endpoint: http://localhost:3000/send-message
+📊 Status API: http://localhost:3000/status
+
+👤 Client connected: YLcGiTF-lqOquBOOAAAB
+⚠️  WhatsApp terputus: LOGOUT
+C:\xampp\htdocs\wa-server\node_modules\whatsapp-web.js\src\authStrategies\LocalAuth.js:51
+                    throw new Error(e);
+                          ^
+
+Error: Error: EBUSY: resource busy or locked, unlink 'C:\xampp\htdocs\wa-server\.wwebjs_auth\session\Default\Cookies'
+    at C:\xampp\htdocs\wa-server\node_modules\whatsapp-web.js\src\authStrategies\LocalAuth.js:51:27
+    at async LocalAuth.logout (C:\xampp\htdocs\wa-server\node_modules\whatsapp-web.js\src\authStrategies\LocalAuth.js:49:13)
+    at async C:\xampp\htdocs\wa-server\node_modules\whatsapp-web.js\src\Client.js:351:17
+
+Node.js v24.5.0
