@@ -4902,6 +4902,13 @@ let table; // Variabel untuk menyimpan instance DataTable
 let newDosenList = []; // Untuk menyimpan dosen yang baru ditambahkan
 let removedDosenList = []; // Untuk menyimpan dosen yang baru dihapus
 
+// Store untuk menyimpan state modal dosen yang sedang terbuka
+let openDosenModal = {
+    id: null,
+    element: null,
+    data: null
+};
+
 // Modal Manager Class
 class ModalManager {
     constructor() {
@@ -4955,7 +4962,8 @@ class ModalManager {
             id: modalId,
             type: type,
             element: modalItem,
-            data: data
+            data: data,
+            isDosenModal: type === 'dosen'
         };
         
         this.modals.push(modalObj);
@@ -4978,6 +4986,13 @@ class ModalManager {
         
         // Update body class
         document.body.classList.add('modal-open');
+        
+        // Simpan referensi jika ini adalah modal dosen
+        if (type === 'dosen') {
+            openDosenModal.id = modalId;
+            openDosenModal.element = modalItem;
+            openDosenModal.data = data;
+        }
         
         return modalId;
     }
@@ -5188,6 +5203,13 @@ class ModalManager {
         const modal = this.modals[modalIndex];
         modal.element.classList.add('removing');
         
+        // Reset openDosenModal jika yang ditutup adalah modal dosen
+        if (modalId === openDosenModal.id) {
+            openDosenModal.id = null;
+            openDosenModal.element = null;
+            openDosenModal.data = null;
+        }
+        
         setTimeout(() => {
             if (modal.element.parentNode) {
                 modal.element.parentNode.removeChild(modal.element);
@@ -5271,6 +5293,27 @@ class ModalManager {
     getModalCount() {
         return this.modals.length;
     }
+    
+    // Refresh modal dosen jika sedang terbuka
+    refreshDosenModal(suratId) {
+        const dosenModal = this.modals.find(modal => modal.isDosenModal);
+        if (dosenModal && dosenModal.data) {
+            // Fetch data terbaru dari server
+            fetch(baseUrl + '/surat/get_updated_dosen_data/' + suratId)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.dosen_list) {
+                        // Update modal content dengan data baru
+                        updateDosenModalContent(dosenModal.element, data.dosen_list, suratId);
+                        // Update data di tabel juga
+                        updateTableDataAfterDosenChange(suratId, 'refresh', data.dosen_list);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error refreshing dosen modal:', error);
+                });
+        }
+    }
 }
 
 // Initialize modal manager
@@ -5331,7 +5374,8 @@ function showDosenModal(event, dosenList, namaKegiatan, suratId) {
 
     // Create modal
     const modalId = modalManager.createModal('dosen', {
-        kegiatanTitle: namaKegiatan || "Kegiatan"
+        kegiatanTitle: namaKegiatan || "Kegiatan",
+        suratId: suratId
     });
 
     if (!modalId) return;
@@ -5367,15 +5411,7 @@ function updateDosenModalContent(modalElement, dosenList, suratId) {
 
             const initial = (d.nama_dosen || "-").charAt(0).toUpperCase();
             const hasFoto = d.foto && d.foto.trim() !== '';
-            const isNewDosen = newDosenList.some(newDosen => newDosen.nip === d.nip);
-            const isRemovedDosen = removedDosenList.some(removedDosen => removedDosen.nip === d.nip);
             
-            if (isNewDosen) {
-                item.classList.add('new-dosen');
-            } else if (isRemovedDosen) {
-                item.classList.add('removed-dosen');
-            }
-
             item.innerHTML = `
             <div class="dosen-avatar" style="position: relative;">
                 ${hasFoto ? `
@@ -5387,8 +5423,6 @@ function updateDosenModalContent(modalElement, dosenList, suratId) {
                 ` : `
                     <div class="dosen-avatar-initial">${initial}</div>
                 `}
-                ${isNewDosen ? '<span class="dosen-new-badge">+</span>' : ''}
-                ${isRemovedDosen ? '<span class="dosen-removed-badge">-</span>' : ''}
             </div>
             <div class="dosen-card-info">
                 <div class="dosen-card-name">${d.nama_dosen || '-'}</div>
@@ -6072,7 +6106,8 @@ function showUnsupportedPreview(previewBody, fileUrl, fileName) {
 function bukaModalTambah(suratId, dosenList, pengajuanName) {
     const modalId = modalManager.createModal('tambahDosen', {
         pengajuanName: pengajuanName,
-        currentDosenCount: dosenList ? dosenList.length : 0
+        currentDosenCount: dosenList ? dosenList.length : 0,
+        suratId: suratId
     });
     
     if (!modalId) return;
@@ -6115,7 +6150,7 @@ function setupTambahDosenModal(modalElement, suratId, dosenList, pengajuanName) 
     
     if (submitBtn) {
         submitBtn.addEventListener('click', () => {
-            prosesTambahMultipleDosenInModal(modalElement, suratId, dosenList);
+            prosesTambahMultipleDosenInModal(modalElement, suratId, dosenList, pengajuanName);
         });
     }
     
@@ -6433,7 +6468,7 @@ function setupAutocompleteInModal(modalElement, suratId, currentDosenList) {
 }
 
 // Proses tambah multiple dosen in modal
-function prosesTambahMultipleDosenInModal(modalElement, suratId, currentDosenList) {
+function prosesTambahMultipleDosenInModal(modalElement, suratId, currentDosenList, pengajuanName) {
     if (selectedDosenList.length === 0) {
         Swal.fire({
             icon: 'error',
@@ -6475,16 +6510,16 @@ function prosesTambahMultipleDosenInModal(modalElement, suratId, currentDosenLis
                 const filteredDosen = selectedDosenList.filter(d => 
                     !existingNips.includes(d.nip)
                 );
-                doTambahMultipleDosenInModal(modalElement, suratId, filteredDosen);
+                doTambahMultipleDosenInModal(modalElement, suratId, filteredDosen, pengajuanName);
             }
         });
         return;
     }
     
-    doTambahMultipleDosenInModal(modalElement, suratId, selectedDosenList);
+    doTambahMultipleDosenInModal(modalElement, suratId, selectedDosenList, pengajuanName);
 }
 
-function doTambahMultipleDosenInModal(modalElement, suratId, dosenToAdd) {
+function doTambahMultipleDosenInModal(modalElement, suratId, dosenToAdd, pengajuanName) {
     if (dosenToAdd.length === 0) {
         Swal.fire({
             icon: 'info',
@@ -6535,20 +6570,35 @@ function doTambahMultipleDosenInModal(modalElement, suratId, dosenToAdd) {
             updateProgressBar(100);
             Swal.close();
             
-            // Update data di tabel secara langsung tanpa refresh
-            updateTableDataAfterDosenChange(suratId, 'tambah', dosenToAdd);
+            // =========== PERUBAHAN UTAMA DI SINI ===========
+            // Refresh halaman untuk menampilkan data terbaru
+            refreshPageData();
             
-            // Close modal
+            // Close modal tambah dosen
             const modalId = modalElement.closest('.modal-item').id;
             modalManager.closeModal(modalId);
             
-            // Show success message
+            // Show success message dengan tombol OK
             Swal.fire({
                 icon: 'success',
                 title: 'Berhasil!',
-                text: `${dosenToAdd.length} dosen berhasil ditambahkan`,
-                timer: 2000,
-                showConfirmButton: false
+                html: `
+                    <div style="text-align: center;">
+                        <div style="color: #28a745; font-size: 48px; margin-bottom: 15px;">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <p>${dosenToAdd.length} dosen berhasil ditambahkan</p>
+                        <p style="font-size: 14px; color: #6c757d; margin-top: 10px;">
+                            Halaman akan diperbarui secara otomatis...
+                        </p>
+                    </div>
+                `,
+                showConfirmButton: true,
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#FB8C00'
+            }).then(() => {
+                // Pastikan refresh juga dilakukan setelah user klik OK
+                refreshPageData();
             });
         } else {
             Swal.fire({
@@ -6591,7 +6641,8 @@ function bukaModalKurang(suratId, dosenList, pengajuanName) {
     
     const modalId = modalManager.createModal('tambahDosen', {
         pengajuanName: pengajuanName,
-        currentDosenCount: dosenList ? dosenList.length : 0
+        currentDosenCount: dosenList ? dosenList.length : 0,
+        suratId: suratId
     });
     
     if (!modalId) return;
@@ -6665,7 +6716,7 @@ function setupKurangDosenModal(modalElement, suratId, dosenList, pengajuanName) 
     
     if (submitBtn) {
         submitBtn.addEventListener('click', () => {
-            prosesHapusMultipleDosenInModal(modalElement, suratId, dosenList);
+            prosesHapusMultipleDosenInModal(modalElement, suratId, dosenList, pengajuanName);
         });
     }
     
@@ -6801,7 +6852,7 @@ function hapusSemuaDosenPilihanInModal(modalElement) {
 }
 
 // Proses hapus multiple dosen in modal
-function prosesHapusMultipleDosenInModal(modalElement, suratId, currentDosenList) {
+function prosesHapusMultipleDosenInModal(modalElement, suratId, currentDosenList, pengajuanName) {
     const container = modalElement.querySelector('.selected-dosen-list');
     if (!container) return;
     
@@ -6856,12 +6907,12 @@ function prosesHapusMultipleDosenInModal(modalElement, suratId, currentDosenList
         width: 500
     }).then((result) => {
         if (result.isConfirmed) {
-            doHapusMultipleDosenInModal(modalElement, suratId, nipList);
+            doHapusMultipleDosenInModal(modalElement, suratId, nipList, pengajuanName);
         }
     });
 }
 
-function doHapusMultipleDosenInModal(modalElement, suratId, nipList) {
+function doHapusMultipleDosenInModal(modalElement, suratId, nipList, pengajuanName) {
     Swal.fire({
         title: 'Menghapus Dosen...',
         html: `
@@ -6901,21 +6952,35 @@ function doHapusMultipleDosenInModal(modalElement, suratId, nipList) {
             updateProgressBarHapus(100);
             Swal.close();
             
-            // Update data di tabel secara langsung tanpa refresh
-            const removedDosen = currentDosenList.filter(d => nipList.includes(d.nip));
-            updateTableDataAfterDosenChange(suratId, 'hapus', removedDosen);
+            // =========== PERUBAHAN UTAMA DI SINI ===========
+            // Refresh halaman untuk menampilkan data terbaru
+            refreshPageData();
             
-            // Close modal
+            // Close modal kurang dosen
             const modalId = modalElement.closest('.modal-item').id;
             modalManager.closeModal(modalId);
             
-            // Show success message
+            // Show success message dengan tombol OK
             Swal.fire({
                 icon: 'success',
                 title: 'Berhasil!',
-                text: `${nipList.length} dosen berhasil dihapus`,
-                timer: 2000,
-                showConfirmButton: false
+                html: `
+                    <div style="text-align: center;">
+                        <div style="color: #28a745; font-size: 48px; margin-bottom: 15px;">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <p>${nipList.length} dosen berhasil dihapus</p>
+                        <p style="font-size: 14px; color: #6c757d; margin-top: 10px;">
+                            Halaman akan diperbarui secara otomatis...
+                        </p>
+                    </div>
+                `,
+                showConfirmButton: true,
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#FB8C00'
+            }).then(() => {
+                // Pastikan refresh juga dilakukan setelah user klik OK
+                refreshPageData();
             });
         } else {
             Swal.fire({
@@ -6944,109 +7009,56 @@ function doHapusMultipleDosenInModal(modalElement, suratId, nipList) {
     }
 }
 
-// ===== FUNGSI UTAMA UNTUK UPDATE DATA DI TABEL =====
-
-// Fungsi untuk mengupdate data di tabel setelah perubahan dosen
-function updateTableDataAfterDosenChange(suratId, action, dosenChanged) {
-    // Ambil row yang sesuai dengan suratId
-    const targetRow = $(`tr.row-detail[data-id="${suratId}"]`);
-    
-    if (targetRow.length === 0) return;
-    
-    // Ambil data detail saat ini
-    let currentData = {};
-    try {
-        currentData = JSON.parse(targetRow.attr('data-detail'));
-    } catch (err) {
-        console.error('Error parsing current data:', err);
-        return;
-    }
-    
-    // Fetch data terbaru dari server
-    fetch(baseUrl + '/surat/get_updated_surat_data/' + suratId)
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Update data attribute
-                const updatedData = data.data;
-                targetRow.attr('data-detail', JSON.stringify(updatedData));
-                
-                // Update tampilan kolom dosen
-                updateDosenColumnDisplay(targetRow, updatedData);
-                
-                // Update modal dosen jika sedang terbuka
-                updateDosenModalIfOpen(suratId, updatedData.dosen_data || []);
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching updated data:', error);
-        });
-}
-
-// Fungsi untuk mengupdate tampilan kolom dosen di tabel
-function updateDosenColumnDisplay(rowElement, data) {
-    const dosenColumn = rowElement.find('td:nth-child(5)');
-    const dosenData = data.dosen_data || data.nama_dosen || [];
-    
-    if (!dosenData || dosenData.length === 0) {
-        dosenColumn.html('-');
-        return;
-    }
-    
-    // Siapkan data dosen
-    let dosenList = [];
-    if (Array.isArray(dosenData) && dosenData[0] && typeof dosenData[0] === 'object') {
-        // Format baru: array of objects
-        dosenList = dosenData;
-    } else if (Array.isArray(dosenData)) {
-        // Format lama: array of strings
-        dosenList = dosenData.map((nama, index) => ({
-            nama_dosen: nama,
-            nip: (data.nip && data.nip[index]) || '-',
-            jabatan: (data.jabatan && data.jabatan[index]) || '-',
-            divisi: (data.divisi && data.divisi[index]) || '-',
-            foto: (data.foto && data.foto[index]) || ''
-        }));
-    }
-    
-    const dosenCount = dosenList.length;
-    const nama = dosenList[0]?.nama_dosen || '-';
-    const short = nama.length > 30 ? nama.substring(0, 30) + '...' : nama;
-    
-    // Buat HTML untuk kolom dosen
-    let html = '';
-    if (dosenCount > 1) {
-        html = `
-            <div class="dosen-container clickable"
-                 onclick="showDosenModal(event, ${escapeHtml(JSON.stringify(dosenList))}, 
-                 '${escapeHtml(data.nama_kegiatan || '')}', 
-                 '${data.id || ''}')">
-                <span class="nama-dosen-badge" title="${escapeHtml(nama)} (Klik untuk lihat semua)">${escapeHtml(short)}</span>
-                <span class="nama-dosen-more" title="Klik untuk lihat semua dosen">+${dosenCount - 1} lainnya</span>
+// =========== FUNGSI BARU: REFRESH PAGE DATA ===========
+function refreshPageData() {
+    // Tampilkan loading indicator
+    const loadingHtml = `
+        <div id="loadingOverlay" style="
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            flex-direction: column;
+        ">
+            <div style="
+                width: 60px;
+                height: 60px;
+                border: 5px solid #f3f3f3;
+                border-top: 5px solid #FB8C00;
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+                margin-bottom: 20px;
+            "></div>
+            <div style="
+                font-size: 18px;
+                font-weight: 600;
+                color: #FB8C00;
+                text-align: center;
+            ">
+                Memperbarui data...
             </div>
-        `;
-    } else {
-        html = `
-            <div class="dosen-container" style="cursor: default;">
-                <span class="nama-dosen-badge" title="${escapeHtml(nama)}">${escapeHtml(short)}</span>
-            </div>
-        `;
-    }
+            <style>
+                @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                }
+            </style>
+        </div>
+    `;
     
-    dosenColumn.html(html);
-}
-
-// Fungsi untuk mengupdate modal dosen jika sedang terbuka
-function updateDosenModalIfOpen(suratId, dosenList) {
-    // Cari modal dosen yang sedang terbuka untuk surat ini
-    const dosenModal = modalManager.modals.find(modal => 
-        modal.type === 'dosen' && modal.data.kegiatanTitle === currentPengajuanName
-    );
+    // Tambahkan overlay loading
+    document.body.insertAdjacentHTML('beforeend', loadingHtml);
     
-    if (dosenModal) {
-        // Update modal content
-        updateDosenModalContent(dosenModal.element, dosenList, suratId);
-    }
+    // Refresh halaman setelah delay kecil
+    setTimeout(() => {
+        location.reload();
+    }, 1000);
 }
 
 // ===== DATATABLES INITIALIZATION =====
@@ -7427,380 +7439,5 @@ document.addEventListener('keydown', function(e) {
     }
 });
     </script>
-    <!-- Loading Bar Overlay untuk Sidebar Navigation -->
-<div id="sidebar-loading-overlay" class="sidebar-loading-overlay">
-    <div class="sidebar-loading-container">
-        <div class="sidebar-loading-spinner"></div>
-        <div class="sidebar-loading-text">Memuat Halaman...</div>
-        <div class="sidebar-loading-progress">
-            <div class="sidebar-loading-progress-bar"></div>
-        </div>
-    </div>
-</div>
-<style>
-/* ===== SIDEBAR LOADING OVERLAY ===== */
-.sidebar-loading-overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.85);
-    z-index: 999999;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.sidebar-loading-overlay.active {
-    display: flex;
-    animation: fadeIn 0.3s ease forwards;
-}
-
-.sidebar-loading-container {
-    text-align: center;
-    max-width: 400px;
-    padding: 30px;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-}
-
-.sidebar-loading-spinner {
-    width: 60px;
-    height: 60px;
-    border: 5px solid rgba(251, 140, 0, 0.2);
-    border-radius: 50%;
-    border-top-color: #FB8C00;
-    animation: spin 1s linear infinite;
-    margin: 0 auto 20px;
-}
-
-.sidebar-loading-text {
-    font-size: 18px;
-    font-weight: 600;
-    color: #343a40;
-    margin-bottom: 20px;
-}
-
-.sidebar-loading-progress {
-    width: 100%;
-    background-color: #e9ecef;
-    height: 6px;
-    border-radius: 3px;
-    overflow: hidden;
-    margin-top: 15px;
-}
-
-.sidebar-loading-progress-bar {
-    width: 0%;
-    height: 100%;
-    background: linear-gradient(90deg, #FB8C00 0%, #FFA726 100%);
-    transition: width 0.3s ease;
-    animation: progressAnimation 2s ease-in-out infinite;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
-
-@keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
-}
-
-@keyframes progressAnimation {
-    0% {
-        width: 0%;
-    }
-    50% {
-        width: 70%;
-    }
-    100% {
-        width: 100%;
-    }
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .sidebar-loading-container {
-        max-width: 90%;
-        padding: 20px;
-    }
-    
-    .sidebar-loading-spinner {
-        width: 50px;
-        height: 50px;
-    }
-    
-    .sidebar-loading-text {
-        font-size: 16px;
-    }
-}
-</style>
-<script>
-// ========================================
-// SIDEBAR LOADING BAR HANDLER
-// ========================================
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('🔧 Initializing sidebar loading handler...');
-    
-    const loadingOverlay = document.getElementById('sidebar-loading-overlay');
-    
-    // Fungsi untuk show loading
-    function showSidebarLoading(message = 'Memuat Halaman...') {
-        if (loadingOverlay) {
-            const loadingText = loadingOverlay.querySelector('.sidebar-loading-text');
-            if (loadingText) {
-                loadingText.textContent = message;
-            }
-            
-            loadingOverlay.classList.add('active');
-            document.body.style.overflow = 'hidden';
-            
-            console.log('🔄 Sidebar loading shown:', message);
-        }
-    }
-    
-    // Fungsi untuk hide loading
-    function hideSidebarLoading() {
-        if (loadingOverlay) {
-            loadingOverlay.classList.remove('active');
-            document.body.style.overflow = '';
-            
-            console.log('✅ Sidebar loading hidden');
-        }
-    }
-    
-    // ========================================
-    // ATTACH EVENT LISTENERS KE SIDEBAR LINKS
-    // ========================================
-    
-    // 1. List Pengajuan (Current Page - Skip)
-    const listPengajuanLink = document.querySelector('a[href*="list-surat-tugas"]');
-    if (listPengajuanLink) {
-        listPengajuanLink.addEventListener('click', function(e) {
-            // Skip jika sudah di halaman ini
-            if (window.location.href.includes('list-surat-tugas')) {
-                e.preventDefault();
-                console.log('Already on List Pengajuan page');
-                return;
-            }
-            
-            e.preventDefault();
-            showSidebarLoading('Memuat List Pengajuan...');
-            
-            setTimeout(() => {
-                window.location.href = this.href;
-            }, 500);
-        });
-        console.log('✅ List Pengajuan link attached');
-    }
-    
-    // 2. Surat Tugas
-    const suratTugasLink = document.querySelector('a[href*="input_surat"]');
-    if (suratTugasLink) {
-        suratTugasLink.addEventListener('click', function(e) {
-            e.preventDefault();
-            showSidebarLoading('Memuat Form Surat Tugas...');
-            
-            setTimeout(() => {
-                window.location.href = this.href;
-            }, 500);
-        });
-        console.log('✅ Surat Tugas link attached');
-    }
-    
-    // 3. WhatsApp Server Control
-    const whatsappLink = document.querySelector('a[href*="whatsapp/dashboard"]');
-    if (whatsappLink) {
-        whatsappLink.addEventListener('click', function(e) {
-            e.preventDefault();
-            showSidebarLoading('Memuat WhatsApp Server Control...');
-            
-            setTimeout(() => {
-                window.location.href = this.href;
-            }, 500);
-        });
-        console.log('✅ WhatsApp link attached');
-    }
-    
-    // 4. Peminjaman Ruangan - Daftar Ruangan
-    const daftarRuanganLink = document.querySelector('a[href*="daftarsemuatempat"]');
-    if (daftarRuanganLink) {
-        daftarRuanganLink.addEventListener('click', function(e) {
-            e.preventDefault();
-            showSidebarLoading('Memuat Daftar Ruangan...');
-            
-            setTimeout(() => {
-                window.location.href = this.href;
-            }, 500);
-        });
-        console.log('✅ Daftar Ruangan link attached');
-    }
-    
-    // 5. Peminjaman Ruangan - Riwayat
-    const riwayatLink = document.querySelector('a[href*="Pic_kk/riwayat"]');
-    if (riwayatLink) {
-        riwayatLink.addEventListener('click', function(e) {
-            e.preventDefault();
-            showSidebarLoading('Memuat Riwayat Peminjaman...');
-            
-            setTimeout(() => {
-                window.location.href = this.href;
-            }, 500);
-        });
-        console.log('✅ Riwayat link attached');
-    }
-    
-    // 6. Ticketing - Riwayat
-    const riwayatTicketingLink = document.querySelector('a[href*="riwayat_ticketing"]');
-    if (riwayatTicketingLink) {
-        riwayatTicketingLink.addEventListener('click', function(e) {
-            e.preventDefault();
-            showSidebarLoading('Memuat Riwayat Ticketing...');
-            
-            setTimeout(() => {
-                window.location.href = this.href;
-            }, 500);
-        });
-        console.log('✅ Riwayat Ticketing link attached');
-    }
-    
-    // 7. Helpdesk
-    const helpdeskLinks = document.querySelectorAll('a[href*="helpdesk"]');
-    helpdeskLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            showSidebarLoading('Menghubungi Helpdesk...');
-            
-            setTimeout(() => {
-                window.location.href = this.href;
-            }, 500);
-        });
-    });
-    if (helpdeskLinks.length > 0) {
-        console.log('✅ Helpdesk links attached');
-    }
-    
-    // 8. Handle Logout Confirmation
-    const logoutConfirmBtn = document.querySelector('button[onclick*="logout"]');
-    if (logoutConfirmBtn) {
-        logoutConfirmBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            showSidebarLoading('Logging out...');
-            
-            setTimeout(() => {
-                window.location.href = 'https://ifik.telkomuniversity.ac.id/auth/logout';
-            }, 800);
-        });
-        console.log('✅ Logout confirm button attached');
-    }
-    
-    // ========================================
-    // 🎯 TOMBOL KEMBALI DI HEADER
-    // ========================================
-    const btnKembali = document.querySelector('.btn-back');
-    if (btnKembali) {
-        btnKembali.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            showSidebarLoading('Kembali ke Form Surat Tugas...');
-            
-            setTimeout(() => {
-                window.location.href = 'https://ifik.telkomuniversity.ac.id/Pic_kk/input_surat';
-            }, 500);
-        });
-        console.log('✅ Tombol Kembali attached');
-    }
-    
-    // ========================================
-    // 🎯 TOMBOL TAMBAH SURAT DI HEADER
-    // ========================================
-    const btnTambahSurat = document.querySelector('.btn-add-surat');
-    if (btnTambahSurat) {
-        btnTambahSurat.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            showSidebarLoading('Membuka Form Surat Tugas...');
-            
-            setTimeout(() => {
-                window.location.href = this.href;
-            }, 500);
-        });
-        console.log('✅ Tombol Tambah Surat attached');
-    }
-    
-    // ========================================
-    // AUTO-HIDE LOADING JIKA ADA ERROR
-    // ========================================
-    
-    // Hide loading jika page load gagal setelah 5 detik
-    window.addEventListener('load', function() {
-        setTimeout(() => {
-            hideSidebarLoading();
-        }, 100);
-    });
-    
-    // Hide loading jika terjadi error
-    window.addEventListener('error', function() {
-        hideSidebarLoading();
-    });
-    
-    console.log('✅ Sidebar loading handler initialized');
-});
-
-// ========================================
-// HANDLE BROWSER BACK/FORWARD
-// ========================================
-window.addEventListener('pageshow', function(event) {
-    if (event.persisted) {
-        // Page loaded from cache (back/forward button)
-        const loadingOverlay = document.getElementById('sidebar-loading-overlay');
-        if (loadingOverlay) {
-            loadingOverlay.classList.remove('active');
-            document.body.style.overflow = '';
-        }
-        console.log('🔄 Page loaded from cache, hiding loading');
-    }
-});
-
-// ========================================
-// OVERRIDE FUNGSI goBack() YANG LAMA
-// ========================================
-window.goBack = function() {
-    const loadingOverlay = document.getElementById('sidebar-loading-overlay');
-    if (loadingOverlay) {
-        const loadingText = loadingOverlay.querySelector('.sidebar-loading-text');
-        if (loadingText) {
-            loadingText.textContent = 'Kembali ke Form Surat Tugas...';
-        }
-        
-        loadingOverlay.classList.add('active');
-        document.body.style.overflow = 'hidden';
-        
-        setTimeout(() => {
-            window.location.href = 'https://ifik.telkomuniversity.ac.id/Pic_kk/input_surat';
-        }, 500);
-    } else {
-        // Fallback jika loading overlay tidak ada
-        window.location.href = 'https://ifik.telkomuniversity.ac.id/Pic_kk/input_surat';
-    }
-};
-</script>
 </body>
 </html>

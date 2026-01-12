@@ -343,7 +343,7 @@
     .back-btn:hover{background:#138D75;transform:translateY(-2px)}
     
     /* ============================================
-       MULTI MODAL STYLES (SAMA DENGAN KAPRODI)
+       MULTI MODAL STYLES (SAMA DENGAN TOTAL)
     ============================================ */
     /* Clickable Row Styles */
     .clickable-row:hover {
@@ -724,139 +724,823 @@
     }
     
     /* ============================================
-       SURAT MODAL STYLES - DIUBAH: LEBAR MAKSIMAL LEBIH BESAR
+       SURAT MODAL STYLES - DIUBAH: SAMA SEPERTI TOTAL
     ============================================ */
     .surat-modal .modal-content {
-        max-width: 1400px !important; /* DIPERBESAR DARI 1100px */
-        width: 98% !important; /* DIPERBESAR DARI 95% */
-        max-height: 95vh !important; /* DIPERBESAR DARI 90vh */
-        min-width: 1000px; /* MINIMAL WIDTH AGAR TIDAK TERLALU KECIL */
+        max-width: 1400px !important;
+        width: 98% !important;
+        max-height: 95vh !important;
+        min-width: 1000px;
+        display: flex;
+        flex-direction: column;
     }
     
-    /* Container khusus untuk preview surat agar lebih lebar */
+    /* Container khusus untuk preview surat */
     .surat-preview-container {
         width: 100%;
-        height: calc(95vh - 150px); /* DIPERBESAR TINGGINYA */
+        height: calc(95vh - 150px);
         display: flex;
         flex-direction: column;
         background: #f8f9fa;
         border-radius: 10px;
         overflow: hidden;
+        position: relative;
     }
     
     /* Header untuk surat preview */
     .surat-preview-header {
-        background: #f8f9fa;
-        padding: 15px 20px;
-        border-bottom: 1px solid #e9ecef;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        padding: 18px 25px;
+        border-bottom: 2px solid #e9ecef;
         display: flex;
         justify-content: space-between;
         align-items: center;
         flex-shrink: 0;
+        z-index: 10;
     }
     
     /* Toolbar untuk tombol download/print */
     .surat-toolbar {
         display: flex;
-        gap: 10px;
+        gap: 12px;
         align-items: center;
     }
     
-    /* Iframe untuk surat - DIPERBESAR */
-    .surat-iframe {
-        width: 100%;
-        height: 100%;
-        border: none;
+    /* Container untuk iframe dengan scrollbar */
+    .surat-iframe-container {
         flex: 1;
+        overflow: auto;
         background: white;
+        position: relative;
+        padding: 30px;
     }
     
-    /* Style khusus untuk tombol dalam surat modal */
+    /* Iframe untuk surat */
+    .surat-iframe {
+        width: 100%;
+        min-height: 100%;
+        border: none;
+        display: block;
+        background: white;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        border-radius: 8px;
+    }
+    
+    /* Style scrollbar untuk container iframe */
+    .surat-iframe-container::-webkit-scrollbar {
+        width: 12px;
+        height: 12px;
+    }
+    
+    .surat-iframe-container::-webkit-scrollbar-track {
+        background: #f8f9fa;
+        border-radius: 6px;
+    }
+    
+    .surat-iframe-container::-webkit-scrollbar-thumb {
+        background: #FB8C00;
+        border-radius: 6px;
+        border: 3px solid #f8f9fa;
+    }
+    
+    .surat-iframe-container::-webkit-scrollbar-thumb:hover {
+        background: #E67E22;
+    }
+    
+    /* ============================================
+       FULLSCREEN STYLES - SAMA SEPERTI TOTAL
+    ============================================ */
+    /* Fullscreen container */
+    .fullscreen-container {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        z-index: 99999 !important;
+        background: rgba(0, 0, 0, 0.9) !important;
+        display: flex !important;
+        flex-direction: column !important;
+        overflow: hidden !important;
+    }
+    
+    /* Fullscreen header */
+    .fullscreen-header {
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        color: white;
+        padding: 12px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-shrink: 0;
+        z-index: 100000;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+    
+    /* Fullscreen content area - SAMA DENGAN TOTAL */
+    .fullscreen-content {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: auto;
+        padding: 20px;
+        position: relative;
+    }
+    
+    /* Fullscreen document container - SAMA DENGAN TOTAL */
+    .fullscreen-document-container {
+        max-width: 1000px;
+        width: 100%;
+        background: white;
+        box-shadow: 0 5px 30px rgba(0,0,0,0.3);
+        border-radius: 8px;
+        overflow: hidden;
+        position: relative;
+        min-height: calc(100vh - 100px);
+        max-height: calc(100vh - 100px);
+    }
+    
+    /* Fullscreen iframe container */
+    .fullscreen-iframe-container {
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background: white;
+        position: relative;
+    }
+    
+    /* Fullscreen iframe - SAMA DENGAN TOTAL */
+    .fullscreen-iframe {
+        width: 100%;
+        min-height: 100%;
+        border: none;
+        display: block;
+        background: white;
+        padding: 30px;
+        box-sizing: border-box;
+    }
+    
+    /* Tombol surat dengan spacing yang lebih baik */
     .surat-btn {
-        padding: 10px 20px;
+        padding: 8px 16px;
         border-radius: 6px;
         border: none;
         cursor: pointer;
         font-weight: 600;
-        font-size: 14px;
+        font-size: 13px;
         display: inline-flex;
         align-items: center;
-        gap: 8px;
+        gap: 6px;
         transition: all 0.2s;
         text-decoration: none !important;
+        min-width: auto;
+        justify-content: center;
     }
     
     .surat-btn-download {
-        background: #16A085;
+        background: linear-gradient(135deg, #FB8C00 0%, #F57C00 100%);
         color: white;
+        box-shadow: 0 2px 5px rgba(251, 140, 0, 0.3);
     }
     
     .surat-btn-download:hover {
-        background: #138D75;
+        background: linear-gradient(135deg, #E67E22 0%, #EF6C00 100%);
         transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(251, 140, 0, 0.4);
     }
     
     .surat-btn-print {
-        background: #2c3e50;
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
         color: white;
+        box-shadow: 0 2px 5px rgba(44, 62, 80, 0.3);
     }
     
     .surat-btn-print:hover {
-        background: #1a252f;
+        background: linear-gradient(135deg, #1a252f 0%, #2c3e50 100%);
         transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(44, 62, 80, 0.4);
     }
     
     .surat-btn-fullscreen {
-        background: #3498db;
+        background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
         color: white;
+        box-shadow: 0 2px 5px rgba(52, 152, 219, 0.3);
     }
     
     .surat-btn-fullscreen:hover {
-        background: #2980b9;
+        background: linear-gradient(135deg, #2980b9 0%, #1c6ea4 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(52, 152, 219, 0.4);
+    }
+    
+    /* TOMBOL KELUAR FULLSCREEN SAMA DENGAN TOTAL */
+    .surat-btn-exit-fullscreen {
+        background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        color: white;
+        box-shadow: 0 2px 5px rgba(231, 76, 60, 0.3);
+        cursor: pointer !important;
+    }
+    
+    .surat-btn-exit-fullscreen:hover {
+        background: linear-gradient(135deg, #c0392b 0%, #a93226 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(231, 76, 60, 0.4);
+    }
+    
+    /* ============================================
+       NOMOR SURAT MODAL STYLES - SAMA DENGAN TOTAL
+    ============================================ */
+    .nomor-surat-modal .modal-content {
+        max-width: 650px !important;
+        width: 95% !important;
+        overflow: hidden;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        border: none;
+    }
+    
+    .nomor-surat-modal .modal-header {
+        background: linear-gradient(135deg, #16A085 0%, #138D75 100%);
+        padding: 25px 30px;
+        border-radius: 15px 15px 0 0;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .nomor-surat-modal .modal-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+        background-size: 20px 20px;
+        opacity: 0.3;
+        animation: float 20s linear infinite;
+    }
+    
+    @keyframes float {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    .nomor-surat-modal .modal-header h3 {
+        font-size: 22px;
+        font-weight: 700;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .nomor-surat-modal .modal-header h3 i {
+        margin-right: 12px;
+        font-size: 24px;
+    }
+    
+    .nomor-surat-content {
+        padding: 35px 40px;
+        background: #f8fafc;
+        position: relative;
+    }
+    
+    /* Info Box yang lebih menarik */
+    .nomor-surat-info-box {
+        background: linear-gradient(to right, #e8f6f3 0%, #f0f9f7 100%);
+        border: 2px solid #a2d9ce;
+        border-radius: 12px;
+        padding: 25px;
+        margin-bottom: 30px;
+        box-shadow: 0 8px 20px rgba(22, 160, 133, 0.1);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .nomor-surat-info-box::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 6px;
+        height: 100%;
+        background: #16A085;
+    }
+    
+    .nomor-surat-info-box h4 {
+        color: #16A085;
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .nomor-surat-info-box h4 i {
+        font-size: 22px;
+    }
+    
+    .nomor-surat-info-details {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 15px;
+        margin-top: 15px;
+    }
+    
+    .info-detail-item {
+        background: white;
+        padding: 15px;
+        border-radius: 8px;
+        border-left: 4px solid #16A085;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+    }
+    
+    .info-detail-label {
+        font-size: 13px;
+        color: #7f8c8d;
+        font-weight: 600;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .info-detail-value {
+        font-size: 16px;
+        color: #2c3e50;
+        font-weight: 600;
+    }
+    
+    .info-detail-value .badge {
+        font-size: 12px;
+        padding: 5px 12px;
+    }
+    
+    /* Form styling yang lebih baik */
+    .nomor-surat-form-container {
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        border: 1px solid #e9ecef;
+    }
+    
+    .form-header {
+        margin-bottom: 25px;
+        text-align: center;
+        position: relative;
+        padding-bottom: 15px;
+    }
+    
+    .form-header::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 25%;
+        width: 50%;
+        height: 3px;
+        background: linear-gradient(to right, transparent, #16A085, transparent);
+        border-radius: 3px;
+    }
+    
+    .form-header h4 {
+        color: #2c3e50;
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+    
+    .form-header p {
+        color: #7f8c8d;
+        font-size: 14px;
+        margin: 0;
+    }
+    
+    /* Input field yang lebih menarik */
+    .input-group-nomor-surat {
+        margin-bottom: 25px;
+    }
+    
+    .input-label {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 600;
+        color: #2c3e50;
+        font-size: 15px;
+        margin-bottom: 12px;
+    }
+    
+    .input-label i {
+        color: #16A085;
+        font-size: 18px;
+    }
+    
+    .required-star {
+        color: #e74c3c;
+        margin-left: 4px;
+    }
+    
+    .nomor-surat-input-container {
+        position: relative;
+    }
+    
+    .nomor-surat-input {
+        width: 100%;
+        padding: 16px 20px;
+        font-size: 17px;
+        font-weight: 600;
+        color: #2c3e50;
+        background: #f8fafc;
+        border: 2px solid #d5dbdb;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+        outline: none;
+        font-family: 'Courier New', monospace;
+        letter-spacing: 1px;
+    }
+    
+    .nomor-surat-input:focus {
+        border-color: #16A085;
+        background: white;
+        box-shadow: 0 0 0 4px rgba(22, 160, 133, 0.15);
         transform: translateY(-2px);
     }
     
-    /* Fullscreen mode untuk surat */
-    .surat-iframe.fullscreen {
+    .nomor-surat-input::placeholder {
+        color: #aab7b8;
+        font-weight: normal;
+        letter-spacing: normal;
+    }
+    
+    .input-hint {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #7f8c8d;
+        font-size: 13px;
+        margin-top: 8px;
+        padding: 10px 15px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        border-left: 3px solid #3498db;
+    }
+    
+    .input-hint i {
+        color: #3498db;
+    }
+    
+    .format-example {
+        display: inline-block;
+        background: #2c3e50;
+        color: white;
+        padding: 4px 10px;
+        border-radius: 5px;
+        font-family: 'Courier New', monospace;
+        font-size: 12px;
+        margin-left: 5px;
+    }
+    
+    /* Error message styling */
+    .nomor-surat-error {
+        background: #fdf2f2;
+        color: #e74c3c;
+        padding: 12px 15px;
+        border-radius: 8px;
+        margin-top: 10px;
+        font-size: 13px;
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        border-left: 4px solid #e74c3c;
+        animation: shake 0.5s ease;
+    }
+    
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+        20%, 40%, 60%, 80% { transform: translateX(5px); }
+    }
+    
+    .nomor-surat-error i {
+        font-size: 16px;
+        margin-top: 2px;
+    }
+    
+    /* Tombol yang lebih menarik */
+    .nomor-surat-actions {
+        display: flex;
+        justify-content: space-between;
+        gap: 15px;
+        margin-top: 30px;
+        padding-top: 25px;
+        border-top: 1px solid #e9ecef;
+    }
+    
+    .btn-nomor-cancel {
+        background: #95a5a6;
+        color: white;
+        border: none;
+        padding: 14px 28px;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 15px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 140px;
+        justify-content: center;
+    }
+    
+    .btn-nomor-cancel:hover {
+        background: #7f8c8d;
+        transform: translateY(-3px);
+        box-shadow: 0 7px 15px rgba(149, 165, 166, 0.3);
+    }
+    
+    .btn-nomor-submit {
+        background: linear-gradient(135deg, #16A085 0%, #138D75 100%);
+        color: white;
+        border: none;
+        padding: 14px 28px;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 15px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 180px;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .btn-nomor-submit::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: 0.5s;
+    }
+    
+    .btn-nomor-submit:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 7px 20px rgba(22, 160, 133, 0.4);
+    }
+    
+    .btn-nomor-submit:hover::before {
+        left: 100%;
+    }
+    
+    .btn-nomor-submit:disabled {
+        background: #bdc3c7;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+    }
+    
+    .btn-nomor-submit:disabled:hover::before {
+        left: -100%;
+    }
+    
+    /* Loading spinner */
+    .btn-nomor-submit .spinner {
+        display: inline-block;
+        width: 18px;
+        height: 18px;
+        border: 3px solid rgba(255,255,255,0.3);
+        border-radius: 50%;
+        border-top-color: white;
+        animation: spin 1s ease-in-out infinite;
+    }
+    
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+    
+    /* ============================================
+       MODAL PIN DISPOSISI - DIPERBAIKI
+    ============================================ */
+    #pinModal {
+        display: none;
         position: fixed;
         top: 0;
         left: 0;
-        width: 100vw;
-        height: 100vh;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.45);
+        backdrop-filter: blur(3px);
+        align-items: center;
+        justify-content: center;
         z-index: 9999;
-        background: white;
     }
-    
-    /* Eviden Modal Styles */
-    .eviden-modal .modal-content {
-        max-width: 800px;
-        width: 95%;
-        max-height: 85vh;
+
+    .pin-modal-content {
+        background: #ffffff;
+        padding: 28px;
+        border-radius: 14px;
+        width: 360px;
+        text-align: center;
+        animation: fadeIn 0.25s ease;
+        box-shadow: 0 12px 30px rgba(0,0,0,0.25);
     }
-    
-    /* Approve Modal Styles */
-    .approve-modal .modal-content {
-        max-width: 500px;
-        width: 95%;
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: scale(0.95); }
+        to { opacity: 1; transform: scale(1); }
     }
-    
-    /* Reject Modal Styles */
-    .reject-modal .modal-content {
-        max-width: 600px;
-        width: 95%;
+
+    .pin-modal-header {
+        margin-bottom: 18px;
+        color: #333;
+        font-weight: 700;
+        font-size: 20px;
     }
-    
-    /* Return Modal Styles */
-    .return-modal .modal-content {
-        max-width: 600px;
-        width: 95%;
-        max-height: 85vh;
+
+    .pin-input-container {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        margin-bottom: 25px;
     }
-    
-    /* Nomor Surat Modal Styles */
-    .nomor-surat-modal .modal-content {
-        max-width: 500px;
-        width: 95%;
+
+    .pin-icon {
+        position: absolute;
+        left: 30px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #16A085;
+        font-size: 18px;
+    }
+
+    .pin-input {
+        width: 220px;
+        padding: 12px 40px;
+        border: 2px solid #16A085;
+        border-radius: 8px;
+        font-size: 18px;
+        text-align: center;
+        letter-spacing: 6px;
+        outline: none;
+    }
+
+    .pin-input::placeholder {
+        letter-spacing: normal;
+        color: #bdc3c7;
+    }
+
+    .pin-buttons {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        margin-bottom: 15px;
+    }
+
+    .pin-button {
+        background: #16A085;
+        color: white;
+        border: none;
+        padding: 10px 22px;
+        border-radius: 7px;
+        cursor: pointer;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: all 0.2s;
+        min-width: 120px;
+    }
+
+    .pin-button:hover {
+        background: #138D75;
+        transform: translateY(-1px);
+    }
+
+    .pin-button.cancel {
+        background: #7f8c8d;
+    }
+
+    .pin-button.cancel:hover {
+        background: #6c7a7d;
+    }
+
+    .pin-footer {
+        margin-top: 15px;
+        font-size: 12px;
+        color: #7f8c8d;
+    }
+
+    .pin-change-link {
+        background: none;
+        border: none;
+        color: #16A085;
+        cursor: pointer;
+        font-weight: 600;
+        text-decoration: underline;
+        font-size: 13px;
+        margin-top: 10px;
+    }
+
+    .pin-change-link:hover {
+        color: #138D75;
+    }
+
+    /* Modal Ubah PIN */
+    #ubahPinModal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+    }
+
+    .ubah-pin-modal-content {
+        background: #fff;
+        width: 380px;
+        padding: 25px;
+        border-radius: 14px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+        text-align: center;
+    }
+
+    .ubah-pin-input-group {
+        text-align: left;
+        margin-bottom: 12px;
+    }
+
+    .ubah-pin-input-group label {
+        display: block;
+        margin-bottom: 5px;
+        color: #2c3e50;
+        font-weight: 600;
+    }
+
+    .ubah-pin-input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 16px;
+        outline: none;
+    }
+
+    .ubah-pin-input:focus {
+        border-color: #16A085;
+        box-shadow: 0 0 0 2px rgba(22, 160, 133, 0.1);
+    }
+
+    .ubah-pin-buttons {
+        display: flex;
+        gap: 10px;
+        margin-top: 25px;
+        justify-content: center;
+    }
+
+    .ubah-pin-button {
+        background: #16A085;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        min-width: 100px;
+        transition: all 0.2s;
+    }
+
+    .ubah-pin-button:hover {
+        background: #138D75;
+        transform: translateY(-1px);
+    }
+
+    .ubah-pin-button.cancel {
+        background: #7f8c8d;
+    }
+
+    .ubah-pin-button.cancel:hover {
+        background: #6c7a7d;
+    }
+
+    .pin-message {
+        margin-top: 12px;
+        color: red;
+        font-size: 13px;
+        min-height: 20px;
     }
     
     /* ============================================
@@ -866,6 +1550,12 @@
         .surat-modal .modal-content {
             max-width: 95% !important;
             min-width: auto !important;
+        }
+        
+        /* Responsive untuk fullscreen */
+        .fullscreen-document-container {
+            max-width: 95%;
+            margin: 0 20px;
         }
     }
     
@@ -916,7 +1606,7 @@
             content: attr(data-label);
             float: left;
             font-weight: bold;
-                text-transform: uppercase;
+            text-transform: uppercase;
             font-size: 12px;
             color: #7f8c8d;
         }
@@ -944,6 +1634,77 @@
         .surat-btn {
             padding: 8px 15px;
             font-size: 13px;
+        }
+        
+        /* Fullscreen responsive */
+        .fullscreen-document-container {
+            max-width: 100%;
+            margin: 0 10px;
+            border-radius: 0;
+        }
+        
+        .fullscreen-iframe {
+            padding: 20px;
+        }
+        
+        /* Nomor surat modal responsive */
+        .nomor-surat-modal .modal-content {
+            max-width: 95% !important;
+            margin: 10px;
+        }
+        
+        .nomor-surat-content {
+            padding: 25px;
+        }
+        
+        .nomor-surat-info-details {
+            grid-template-columns: 1fr;
+        }
+        
+        .nomor-surat-form-container {
+            padding: 20px;
+        }
+        
+        .nomor-surat-actions {
+            flex-direction: column;
+        }
+        
+        .btn-nomor-cancel, .btn-nomor-submit {
+            width: 100%;
+            min-width: auto;
+        }
+        
+        /* Modal PIN responsive */
+        .pin-modal-content {
+            width: 90%;
+            max-width: 320px;
+            padding: 20px;
+        }
+        
+        .pin-input {
+            width: 180px;
+            padding: 10px 35px;
+            font-size: 16px;
+        }
+        
+        .pin-icon {
+            left: 25px;
+        }
+        
+        .pin-buttons {
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .pin-button {
+            width: 100%;
+            min-width: auto;
+        }
+        
+        .ubah-pin-modal-content {
+            width: 90%;
+            max-width: 350px;
+            padding: 20px;
         }
     }
     
@@ -1010,280 +1771,137 @@
             top: 10px;
             max-width: calc(100% - 20px);
         }
-    }
-    /* ============================================
-   SURAT MODAL STYLES - PERBAIKAN JARAK KE TEPI
-============================================ */
-.surat-modal .modal-content {
-    max-width: 1400px !important;
-    width: 98% !important;
-    max-height: 95vh !important;
-    min-width: 1000px;
-    display: flex;
-    flex-direction: column;
-}
+        
+        /* Fullscreen di mobile */
+        .fullscreen-content {
+            padding: 10px;
+        }
+        
+        .fullscreen-document-container {
+            max-width: 100% !important;
+            margin: 0 5px !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+            min-height: calc(100vh - 80px) !important;
+            max-height: calc(100vh - 80px) !important;
+        }
+        
+        .fullscreen-iframe {
+            padding: 15px !important;
+        }
+        
+        .fullscreen-header {
+            padding: 10px 15px !important;
+        }
 
-/* Container untuk konten surat dengan padding */
-.surat-content-wrapper {
+        
+        
+        .surat-btn {
+            padding: 6px 10px !important;
+            font-size: 11px !important;
+        }
+        
+        /* Nomor surat modal di mobile */
+        .nomor-surat-modal .modal-content {
+            max-width: 100% !important;
+            width: 100% !important;
+            border-radius: 0;
+            margin: 0;
+            min-height: 100vh;
+        }
+        
+        .nomor-surat-modal .modal-header {
+            padding: 20px;
+        }
+        
+        .nomor-surat-content {
+            padding: 20px 15px;
+        }
+        
+        .nomor-surat-info-box {
+            padding: 20px 15px;
+        }
+        
+        .nomor-surat-input {
+            font-size: 16px;
+            padding: 14px;
+        }
+        
+        .nomor-surat-actions {
+            padding-top: 20px;
+        }
+        
+        /* Modal PIN di mobile */
+        .pin-modal-content {
+            margin: 10px;
+        }
+        
+        .pin-input {
+            width: 160px;
+            padding: 8px 30px;
+            font-size: 16px;
+        }
+        
+        .pin-icon {
+            left: 20px;
+            font-size: 16px;
+        }
+        
+        .ubah-pin-modal-content {
+            margin: 10px;
+        }
+        
+        .ubah-pin-input {
+            padding: 8px;
+            font-size: 15px;
+        }
+    }
+
+    /* Fullscreen content area - TAMBAHKAN OVERFLOW AUTO */
+.fullscreen-content {
     flex: 1;
     display: flex;
-    flex-direction: column;
-    padding: 20px; /* Tambahkan padding di sini */
+    justify-content: center;
+    align-items: flex-start; /* Ubah dari center ke flex-start */
+    overflow: auto; /* PERBAIKAN: Tambahkan overflow auto */
+    padding: 20px;
+    position: relative;
+    width: 100%;
 }
 
-/* Container khusus untuk preview surat dengan scrollbar */
-.surat-preview-container {
+/* Fullscreen document container - DAPAT DISCROLL */
+.fullscreen-document-container {
+    max-width: 1000px;
+    width: 100%;
+    background: white;
+    box-shadow: 0 5px 30px rgba(0,0,0,0.3);
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    min-height: auto; /* Ubah dari min-height tetap */
+    max-height: none; /* Hapus max-height tetap */
+    margin: 0 auto; /* Center container */
+}
+
+/* Fullscreen iframe container - TAMBAHKAN OVERFLOW AUTO */
+.fullscreen-iframe-container {
     width: 100%;
     height: 100%;
-    display: flex;
-    flex-direction: column;
-    background: #f8f9fa;
-    border-radius: 12px;
-    overflow: hidden;
-    position: relative;
-    border: 1px solid #e9ecef;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-/* Header untuk surat preview */
-.surat-preview-header {
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    padding: 18px 25px;
-    border-bottom: 2px solid #e9ecef;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-shrink: 0;
-    z-index: 10;
-}
-
-/* Toolbar untuk tombol download/print */
-.surat-toolbar {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-}
-
-/* Container untuk iframe dengan scrollbar dan padding */
-.surat-iframe-container {
-    flex: 1;
-    overflow: auto;
+    overflow: auto; /* PERBAIKAN: Tambahkan overflow auto */
     background: white;
     position: relative;
-    padding: 30px; /* TAMBAHKAN PADDING DI SINI */
 }
 
-/* Iframe untuk surat - DIPERBAIKI untuk scroll dengan margin */
-.surat-iframe {
+/* Fullscreen iframe - HAPUS MIN-HEIGHT 100% DAN PADDING BESAR */
+.fullscreen-iframe {
     width: 100%;
-    min-height: 100%;
+    min-height: auto; /* Ubah dari 100% ke auto */
     border: none;
     display: block;
     background: white;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    border-radius: 8px; /* Tambahkan border radius */
-}
-
-/* Styling untuk konten dalam iframe */
-.surat-iframe body {
-    margin: 0;
-    padding: 40px !important; /* Beri padding pada konten surat */
-    font-family: 'Times New Roman', Times, serif;
-    background: white;
-}
-
-/* Style scrollbar untuk container iframe */
-.surat-iframe-container::-webkit-scrollbar {
-    width: 12px;
-    height: 12px;
-}
-
-.surat-iframe-container::-webkit-scrollbar-track {
-    background: #f8f9fa;
-    border-radius: 6px;
-}
-
-.surat-iframe-container::-webkit-scrollbar-thumb {
-    background: #FB8C00;
-    border-radius: 6px;
-    border: 3px solid #f8f9fa;
-}
-
-.surat-iframe-container::-webkit-scrollbar-thumb:hover {
-    background: #E67E22;
-}
-
-/* Fullscreen mode untuk surat */
-.surat-iframe.fullscreen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: 9999;
-    background: white;
-    padding: 40px; /* Padding saat fullscreen */
-}
-
-/* Style untuk detail content dalam modal surat */
-.surat-modal .detail-content {
-    padding: 0 !important;
-    overflow: hidden;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-/* Tombol surat dengan spacing yang lebih baik */
-.surat-btn {
-    padding: 10px 20px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 14px;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    transition: all 0.2s;
-    text-decoration: none !important;
-    min-width: 110px;
-    justify-content: center;
-}
-
-.surat-btn-download {
-    background: linear-gradient(135deg, #138D75 0%, #138D75 100%);
-    color: white;
-    box-shadow: 0 2px 5px rgba(251, 140, 0, 0.3);
-}
-
-.surat-btn-download:hover {
-    background: linear-gradient(135deg, #138D75 0%, #138D75 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(251, 140, 0, 0.4);
-}
-
-.surat-btn-print {
-    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-    color: white;
-    box-shadow: 0 2px 5px rgba(44, 62, 80, 0.3);
-}
-
-.surat-btn-print:hover {
-    background: linear-gradient(135deg, #1a252f 0%, #2c3e50 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(44, 62, 80, 0.4);
-}
-
-.surat-btn-fullscreen {
-    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
-    color: white;
-    box-shadow: 0 2px 5px rgba(52, 152, 219, 0.3);
-}
-
-.surat-btn-fullscreen:hover {
-    background: linear-gradient(135deg, #2980b9 0%, #1c6ea4 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(52, 152, 219, 0.4);
-}
-/* ============================================
-   SURAT MODAL STYLES - PERBAIKAN UNTUK SCROLLBAR
-============================================ */
-.surat-modal .modal-content {
-    max-width: 1400px !important;
-    width: 98% !important;
-    max-height: 95vh !important;
-    min-width: 1000px;
-    display: flex;
-    flex-direction: column;
-}
-
-/* Container khusus untuk preview surat dengan scrollbar */
-.surat-preview-container {
-    width: 100%;
-    height: calc(95vh - 150px);
-    display: flex;
-    flex-direction: column;
-    background: #f8f9fa;
-    border-radius: 10px;
-    overflow: hidden;
-    position: relative;
-}
-
-/* Header untuk surat preview */
-.surat-preview-header {
-    background: #f8f9fa;
-    padding: 15px 20px;
-    border-bottom: 1px solid #e9ecef;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-shrink: 0;
-    z-index: 10;
-}
-
-/* Toolbar untuk tombol download/print */
-.surat-toolbar {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-
-/* Container untuk iframe dengan scrollbar */
-.surat-iframe-container {
-    flex: 1;
-    overflow: auto;
-    background: white;
-    position: relative;
-}
-
-/* Iframe untuk surat - DIPERBAIKI untuk scroll */
-.surat-iframe {
-    width: 100%;
-    min-height: 100%;
-    border: none;
-    display: block;
-    background: white;
-}
-
-/* Style scrollbar untuk container iframe */
-.surat-iframe-container::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
-}
-
-.surat-iframe-container::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 5px;
-}
-
-.surat-iframe-container::-webkit-scrollbar-thumb {
-    background: #FB8C00;
-    border-radius: 5px;
-}
-
-.surat-iframe-container::-webkit-scrollbar-thumb:hover {
-    background: #E67E22;
-}
-
-/* Fullscreen mode untuk surat */
-.surat-iframe.fullscreen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: 9999;
-    background: white;
-}
-
-/* Style untuk detail content dalam modal surat */
-.surat-modal .detail-content {
-    padding: 0 !important;
-    overflow: hidden;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
+    padding: 30px; /* DIPERKECIL dari 40px */
+    box-sizing: border-box;
+    overflow-y: visible !important; /* Pastikan bisa discroll */
 }
 </style>
 </head>
@@ -1827,141 +2445,123 @@
     </div>
 </template>
 
+<!-- ============================================
+   TEMPLATE BARU: MODAL NOMOR SURAT YANG LEBIH BAGUS (SAMA DENGAN TOTAL)
+============================================ -->
 <template id="nomorSuratModalTemplate">
     <div class="modal-content nomor-surat-modal">
         <div class="modal-header">
-            <h3><i class="fa-solid fa-hashtag"></i> Masukkan Nomor Surat</h3>
+            <h3><i class="fa-solid fa-hashtag"></i> Tambahkan Nomor Surat</h3>
             <button class="close-modal">&times;</button>
         </div>
-        <div style="padding:25px">
-            <div class="approve-info-box" id="nomorSuratInfoBox">
-                <!-- Info akan diisi oleh JavaScript -->
+        <div class="nomor-surat-content">
+            <!-- Informasi Surat -->
+            <div class="nomor-surat-info-box">
+                <h4><i class="fa-solid fa-info-circle"></i> Informasi Surat Tugas</h4>
+                <div id="nomorSuratInfoDetails" class="nomor-surat-info-details">
+                    <!-- Content akan diisi oleh JavaScript -->
+                </div>
             </div>
             
-            <form class="nomor-surat-form">
-                <input type="hidden" class="nomor-surat-id" value="">
+            <!-- Form Input Nomor Surat -->
+            <div class="nomor-surat-form-container">
+                <div class="form-header">
+                    <h4><i class="fa-solid fa-file-signature"></i> Input Nomor Surat</h4>
+                    <p>Masukkan nomor surat resmi untuk pengajuan ini</p>
+                </div>
                 
-                <div style="margin-bottom:20px">
-                    <label style="display:block;margin-bottom:8px;font-weight:600;color:#2c3e50;font-size:14px">
-                        <i class="fa-solid fa-file-alt"></i> Nomor Surat <span style="color:#e74c3c">*</span>
-                    </label>
-                    <input 
-                        type="text" 
-                        class="nomor-surat-input form-control" 
-                        placeholder="Contoh: 001/SKT/FT/2025" 
-                        required
-                        autocomplete="off"
-                    >
-                    <div style="color:#7f8c8d;font-size:12px;margin-top:5px;display:flex;align-items:center;gap:5px">
-                        <i class="fa-solid fa-exclamation-circle"></i> Format: XXX/SKT/FT/Tahun
+                <form class="nomor-surat-form">
+                    <input type="hidden" class="nomor-surat-id" value="">
+                    
+                    <div class="input-group-nomor-surat">
+                        <div class="input-label">
+                            <i class="fa-solid fa-hashtag"></i>
+                            Nomor Surat
+                            <span class="required-star">*</span>
+                        </div>
+                        
+                        <div class="nomor-surat-input-container">
+                            <input 
+                                type="text" 
+                                class="nomor-surat-input" 
+                                placeholder="Contoh: 001/SKT/FT/2025" 
+                                required
+                                autocomplete="off"
+                                maxlength="50"
+                            >
+                        </div>
+                        
+                        <div class="input-hint">
+                            <i class="fa-solid fa-lightbulb"></i>
+                            Format yang disarankan: 
+                            <span class="format-example">XXX/SKT/FT/Tahun</span>
+                            atau
+                            <span class="format-example">Nomor/SK/Unit/Tahun</span>
+                        </div>
+                        
+                        <div class="nomor-surat-error" style="display:none">
+                            <i class="fa-solid fa-exclamation-circle"></i>
+                            <span class="error-message"></span>
+                        </div>
                     </div>
-                    <div class="nomor-surat-error" style="color:#e74c3c;font-size:12px;margin-top:5px;display:none">
-                        <!-- Error message -->
-                    </div>
-                </div>
 
-                <div style="display:flex;justify-content:flex-end;gap:12px;margin-top:25px;padding-top:20px;border-top:1px solid #e9ecef">
-                    <button type="button" class="btn btn-cancel" style="background:#95a5a6;color:white">
-                        <i class="fa-solid fa-times"></i> Batal
-                    </button>
-                    <button type="submit" class="btn btn-submit" style="background:#16A085;color:white">
-                        <i class="fa-solid fa-save"></i> Simpan Nomor Surat
-                    </button>
-                </div>
-            </form>
+                    <div class="nomor-surat-actions">
+                        <button type="button" class="btn-nomor-cancel">
+                            <i class="fa-solid fa-times"></i> Batal
+                        </button>
+                        <button type="submit" class="btn-nomor-submit">
+                            <i class="fa-solid fa-save"></i> Simpan Nomor Surat
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </template>
 
-<!-- Modal PIN (tetap seperti sebelumnya) -->
-<div id="pinModal" 
-    style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;
-    background:rgba(0,0,0,0.45);backdrop-filter:blur(3px);
-    align-items:center;justify-content:center;z-index:9999">
-
-    <div style="
-        background:#ffffff;
-        padding:28px;
-        border-radius:14px;
-        width:360px;
-        text-align:center;
-        animation: fadeIn 0.25s ease;
-        box-shadow:0 12px 30px rgba(0,0,0,0.25);
-    ">
-        <h3 style="margin-bottom:18px;color:#333;font-weight:700;font-size:20px;">
+<!-- Modal PIN Verifikasi (DI TENGAH) -->
+<div id="pinModal">
+    <div class="pin-modal-content">
+        <h3 class="pin-modal-header">
             <i class="fas fa-shield-alt" style="margin-right:8px;color:#16A085;"></i>
             Verifikasi PIN
         </h3>
 
         <!-- Input PIN -->
-        <div class="pin-input-container" style="position:relative;display:flex;justify-content:center;">
-            <i class="fas fa-key pin-icon" 
-            style="position:absolute;left:30px;top:50%;transform:translateY(-50%);color:#16A085;"></i>
-
+        <div class="pin-input-container">
+            <i class="fas fa-key pin-icon"></i>
             <input type="password"
                 id="pinInput"
                 maxlength="6"
-                style="
-                    width:220px;
-                    padding:12px 40px;
-                    border:2px solid #16A085;
-                    border-radius:8px;
-                    font-size:18px;
-                    text-align:center;
-                    letter-spacing:6px;
-                    outline:none;
-                "
+                class="pin-input"
                 placeholder="••••••"
                 oninput="this.value = this.value.replace(/[^0-9]/g, '')">
         </div>
 
         <!-- Tombol -->
-        <div style="display:flex;gap:12px;justify-content:center;margin-top:25px;">
-            <button onclick="checkPin()" 
-                style="
-                    background:#16A085;
-                    color:white;
-                    border:none;
-                    padding:10px 22px;
-                    border-radius:7px;
-                    cursor:pointer;
-                    font-weight:600;
-                ">
+        <div class="pin-buttons">
+            <button onclick="checkPin()" class="pin-button">
                 <i class="fas fa-check"></i> Lanjut
             </button>
-
-            <button onclick="closePinModal()"
-                style="
-                    background:#7f8c8d;
-                    color:white;
-                    border:none;
-                    padding:10px 22px;
-                    border-radius:7px;
-                    cursor:pointer;
-                    font-weight:600;
-                ">
+            <button onclick="closePinModal()" class="pin-button cancel">
                 <i class="fas fa-times"></i> Batal
             </button>
         </div>
-<button onclick="openUbahPinModal()" 
-        style="background:none;border:none;color:#16A085;margin-top:10px;cursor:pointer;font-weight:600;">
-    Ubah PIN?
-</button>
 
-        <p style="margin-top:15px;font-size:12px;color:#7f8c8d;">
-            <i class="fas fa-info-circle"></i> PIN terdiri dari 6 digit angka
-        </p>
+        <div class="pin-footer">
+            <button onclick="openUbahPinModal()" class="pin-change-link">
+                Ubah PIN?
+            </button>
+            <p style="margin-top:8px;">
+                <i class="fas fa-info-circle"></i> PIN terdiri dari 6 digit angka
+            </p>
+        </div>
     </div>
 </div>
 
 <!-- Modal Ubah PIN -->
-<div id="ubahPinModal" 
-    style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;
-    background:rgba(0,0,0,0.5);align-items:center;justify-content:center;z-index:9999">
-
-    <div style="background:#fff;width:380px;padding:25px;border-radius:14px;
-        box-shadow:0 15px 35px rgba(0,0,0,0.25);text-align:center;">
-
+<div id="ubahPinModal">
+    <div class="ubah-pin-modal-content">
         <h2 style="margin-bottom:10px;color:#333;font-weight:700;">
             <i class="fas fa-key" style="color:#16A085;margin-right:8px;"></i>
             Ubah PIN
@@ -1971,41 +2571,33 @@
             Masukkan PIN lama dan PIN baru (6 digit).
         </p>
 
-        <div style="text-align:left;margin-bottom:12px;">
+        <div class="ubah-pin-input-group">
             <label>PIN Lama</label>
-            <input type="password" id="oldPin" maxlength="6"
-                style="width:100%;padding:10px;border:1px solid #ccc;border-radius:8px;margin-top:5px;"
+            <input type="password" id="oldPin" maxlength="6" class="ubah-pin-input"
                 oninput="this.value=this.value.replace(/[^0-9]/g,'')">
         </div>
 
-        <div style="text-align:left;">
+        <div class="ubah-pin-input-group">
             <label>PIN Baru</label>
-            <input type="password" id="newPin" maxlength="6"
-                style="width:100%;padding:10px;border:1px solid #ccc;border-radius:8px;margin-top:5px;"
+            <input type="password" id="newPin" maxlength="6" class="ubah-pin-input"
                 oninput="this.value=this.value.replace(/[^0-9]/g,'')">
         </div>
 
-        <div style="display:flex;gap:10px;margin-top:25px;justify-content:center;">
-            <button onclick="submitUbahPin()" 
-                style="background:#16A085;color:white;border:none;padding:10px 20px;
-                border-radius:8px;cursor:pointer;font-weight:600;">
+        <div class="ubah-pin-buttons">
+            <button onclick="submitUbahPin()" class="ubah-pin-button">
                 Simpan
             </button>
-
-            <button onclick="closeUbahPinModal()" 
-                style="background:#7f8c8d;color:white;border:none;padding:10px 20px;
-                border-radius:8px;cursor:pointer;font-weight:600;">
+            <button onclick="closeUbahPinModal()" class="ubah-pin-button cancel">
                 Batal
             </button>
         </div>
 
-        <p id="pinMsg" style="margin-top:12px;color:red;font-size:13px;"></p>
-
+        <p id="pinMsg" class="pin-message"></p>
     </div>
 </div>
 
 <script>
-// ===== MULTI MODAL MANAGEMENT SYSTEM (SAMA DENGAN KAPRODI) =====
+// ===== MULTI MODAL MANAGEMENT SYSTEM (SAMA DENGAN TOTAL) =====
 
 // Global variables
 let modalManager;
@@ -2018,6 +2610,7 @@ let currentNomorSuratNama = null;
 let selectedSurat = null;
 let currentSuratPdfUrl = '';
 let isFullscreen = false;
+let fullscreenContainer = null;
 
 // PERBAIKAN: Fungsi untuk menampilkan alert
 function showAlert(message, type = 'warning') {
@@ -2061,7 +2654,7 @@ function showAlert(message, type = 'warning') {
     }, 5000);
 }
 
-// Modal Manager Class
+// Modal Manager Class (SAMA DENGAN TOTAL)
 class ModalManager {
     constructor() {
         this.modals = [];
@@ -2196,7 +2789,7 @@ class ModalManager {
         return template.content.cloneNode(true).querySelector('.modal-content').outerHTML;
     }
 
-    // Create surat modal - DIUBAH: menggunakan template baru dengan toolbar
+    // Create surat modal - SAMA DENGAN TOTAL
     createSuratModal(data) {
         const template = document.getElementById('suratModalTemplate');
         const content = template.content.cloneNode(true);
@@ -2264,7 +2857,7 @@ class ModalManager {
         return modalContent.outerHTML;
     }
 
-    // Create nomor surat modal
+    // Create nomor surat modal - SAMA DENGAN TOTAL
     createNomorSuratModal(data) {
         const template = document.getElementById('nomorSuratModalTemplate');
         const content = template.content.cloneNode(true);
@@ -2276,16 +2869,26 @@ class ModalManager {
         }
         
         // Generate info box content
-        const infoBox = modalContent.querySelector('#nomorSuratInfoBox');
-        if (infoBox && data.namaKegiatan) {
-            infoBox.innerHTML = `
-                <strong><i class="fa-solid fa-info-circle"></i> Informasi Surat</strong>
-                <p style="margin:8px 0 5px 0">
-                    <strong>Nama Kegiatan:</strong> ${escapeHtml(data.namaKegiatan)}
-                </p>
-                <p style="margin:5px 0">
-                    <strong>Status:</strong> <span class="badge badge-approved" style="display:inline-block">Disetujui Dekan</span>
-                </p>
+        const infoDetails = modalContent.querySelector('#nomorSuratInfoDetails');
+        if (infoDetails && data.namaKegiatan) {
+            infoDetails.innerHTML = `
+                <div class="info-detail-item">
+                    <div class="info-detail-label">Nama Kegiatan</div>
+                    <div class="info-detail-value">${escapeHtml(data.namaKegiatan)}</div>
+                </div>
+                <div class="info-detail-item">
+                    <div class="info-detail-label">Status</div>
+                    <div class="info-detail-value">
+                        <span class="badge badge-approved">Disetujui Dekan</span>
+                    </div>
+                </div>
+                <div class="info-detail-item">
+                    <div class="info-detail-label">Aksi</div>
+                    <div class="info-detail-value">
+                        <i class="fa-solid fa-keyboard" style="color:#16A085"></i> 
+                        Input Nomor Surat Resmi
+                    </div>
+                </div>
             `;
         }
         
@@ -2366,7 +2969,7 @@ class ModalManager {
         }
         
         // Cancel buttons
-        const cancelBtns = modalElement.querySelectorAll('.btn-cancel');
+        const cancelBtns = modalElement.querySelectorAll('.btn-nomor-cancel, .btn-cancel');
         cancelBtns.forEach(btn => {
             btn.addEventListener('click', () => this.closeModal(modalId));
         });
@@ -2417,20 +3020,22 @@ class ModalManager {
         }
     }
 
-    // Attach surat modal listeners - DIUBAH: untuk modal yang lebih lebar
+    // Attach surat modal listeners - SAMA DENGAN TOTAL
     attachSuratModalListeners(modalElement, modalId, data) {
         // Load surat content if data provided
         if (data.suratId) {
             this.loadSuratContent(modalElement, data.suratId);
         }
         
-        // Setup fullscreen toggle button
+        // Setup fullscreen toggle button - DIPERBAIKI
         const fullscreenBtn = modalElement.querySelector('.surat-btn-fullscreen');
         if (fullscreenBtn) {
-            fullscreenBtn.addEventListener('click', () => {
+            fullscreenBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
                 const iframe = modalElement.querySelector('.surat-iframe');
                 if (iframe) {
-                    toggleIframeFullscreen(iframe);
+                    toggleFullscreen(iframe);
                 }
             });
         }
@@ -2504,7 +3109,7 @@ class ModalManager {
         }
     }
 
-    // Attach nomor surat modal listeners
+    // Attach nomor surat modal listeners - SAMA DENGAN TOTAL
     attachNomorSuratModalListeners(modalElement, modalId, data) {
         const form = modalElement.querySelector('.nomor-surat-form');
         if (form) {
@@ -2512,23 +3117,35 @@ class ModalManager {
                 e.preventDefault();
                 
                 const id = form.querySelector('.nomor-surat-id').value;
-                const nomorSurat = form.querySelector('.nomor-surat-input').value.trim();
+                const nomorSuratInput = form.querySelector('.nomor-surat-input');
+                const nomorSurat = nomorSuratInput.value.trim();
                 const errorDiv = form.querySelector('.nomor-surat-error');
+                const errorMessage = errorDiv.querySelector('.error-message');
+                const submitBtn = form.querySelector('.btn-nomor-submit');
                 
                 // Reset error
                 errorDiv.style.display = 'none';
-                errorDiv.textContent = '';
+                errorMessage.textContent = '';
                 
+                // Validasi input
                 if (!nomorSurat) {
-                    errorDiv.textContent = 'Nomor surat harus diisi!';
-                    errorDiv.style.display = 'block';
+                    errorMessage.textContent = 'Nomor surat harus diisi!';
+                    errorDiv.style.display = 'flex';
+                    nomorSuratInput.focus();
                     return;
                 }
                 
-                // Disable submit button
-                const submitBtn = form.querySelector('.btn-submit');
+                // Validasi format dasar
+                if (nomorSurat.length < 5) {
+                    errorMessage.textContent = 'Nomor surat terlalu pendek!';
+                    errorDiv.style.display = 'flex';
+                    nomorSuratInput.focus();
+                    return;
+                }
+                
+                // Disable submit button dan tampilkan loading
                 const originalText = submitBtn.innerHTML;
-                submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
+                submitBtn.innerHTML = '<div class="spinner"></div> Menyimpan...';
                 submitBtn.disabled = true;
                 
                 try {
@@ -2549,7 +3166,7 @@ class ModalManager {
                         this.closeModal(modalId);
                         
                         // Tampilkan alert sukses
-                        showAlert('Nomor surat berhasil disimpan!', 'success');
+                        showAlert('✅ Nomor surat berhasil disimpan!', 'success');
                         
                         // Refresh halaman setelah 1 detik
                         setTimeout(() => {
@@ -2557,25 +3174,39 @@ class ModalManager {
                         }, 1000);
                     } else {
                         // Tampilkan error
-                        errorDiv.textContent = result.message || 'Gagal menyimpan nomor surat.';
-                        errorDiv.style.display = 'block';
+                        errorMessage.textContent = result.message || 'Gagal menyimpan nomor surat.';
+                        errorDiv.style.display = 'flex';
                         
                         // Enable button kembali
                         submitBtn.innerHTML = originalText;
                         submitBtn.disabled = false;
+                        
+                        // Fokus ke input
+                        nomorSuratInput.focus();
                     }
                     
                 } catch (error) {
                     console.error('Error saving nomor surat:', error);
-                    errorDiv.textContent = 'Terjadi kesalahan. Silakan coba lagi.';
-                    errorDiv.style.display = 'block';
+                    errorMessage.textContent = 'Terjadi kesalahan. Silakan coba lagi.';
+                    errorDiv.style.display = 'flex';
                     
                     // Enable button kembali
                     submitBtn.innerHTML = originalText;
                     submitBtn.disabled = false;
+                    
+                    // Fokus ke input
+                    nomorSuratInput.focus();
                 }
             });
         }
+        
+        // Auto-focus ke input field saat modal terbuka
+        setTimeout(() => {
+            const inputField = modalElement.querySelector('.nomor-surat-input');
+            if (inputField) {
+                inputField.focus();
+            }
+        }, 100);
     }
 
     // Load detail content
@@ -2588,7 +3219,7 @@ class ModalManager {
                 <div style="text-align:center;padding:60px;">
                     <i class="fa-solid fa-spinner fa-spin" style="font-size:32px;color:#16A085"></i>
                     <p style="margin-top:15px;color:#7f8c8d;font-size:16px">Memuat detail pengajuan...</p>
-                </div>
+            </div>
             `;
             
             const data = await getSuratDetail(suratId);
@@ -2616,7 +3247,7 @@ class ModalManager {
         }
     }
 
-    // Load surat content - DIUBAH: untuk modal yang lebih lebar
+    // Load surat content - SAMA DENGAN TOTAL
     async loadSuratContent(modalElement, suratId) {
         try {
             const iframe = modalElement.querySelector('.surat-iframe');
@@ -2847,12 +3478,181 @@ function showReturnModal(id, namaKegiatan) {
     });
 }
 
-// Fungsi untuk membuka modal nomor surat
+// Fungsi untuk membuka modal nomor surat - SAMA DENGAN TOTAL
 async function openNomorSuratModal(id, namaKegiatan = '') {
     modalManager.createModal('nomor_surat', { 
         suratId: id, 
         namaKegiatan: namaKegiatan 
     });
+}
+
+// ============================================
+// FUNGSI FULLSCREEN YANG DIPERBAIKI - SAMA DENGAN TOTAL
+// ============================================
+
+// Fungsi untuk toggle fullscreen pada iframe - VERSI DIPERBAIKI
+function toggleFullscreen(iframe) {
+    if (!isFullscreen) {
+        enterFullscreen(iframe);
+    } else {
+        exitFullscreen();
+    }
+}
+
+// Masuk ke mode fullscreen
+function enterFullscreen(iframe) {
+    // Simpan modal asli
+    const modal = iframe.closest('.modal-item');
+    const modalId = modal ? modal.id : null;
+    
+    // Buat container fullscreen baru
+    fullscreenContainer = document.createElement('div');
+    fullscreenContainer.className = 'fullscreen-container';
+    fullscreenContainer.id = 'fullscreenContainer';
+    
+    // Buat header fullscreen
+    const fullscreenHeader = document.createElement('div');
+    fullscreenHeader.className = 'fullscreen-header';
+    fullscreenHeader.innerHTML = `
+        <div style="font-weight:600;color:white;font-size:16px">
+            <i class="fa-solid fa-file-contract"></i> Preview Surat Tugas - Mode Fullscreen
+        </div>
+        <div class="surat-toolbar">
+            <button class="surat-btn surat-btn-download" onclick="downloadPDF('${currentSuratPdfUrl}')" title="Download PDF">
+                <i class="fa-solid fa-download"></i> Download
+            </button>
+            <button class="surat-btn surat-btn-print" onclick="printPDF('${currentSuratPdfUrl}')" title="Print Surat">
+                <i class="fa-solid fa-print"></i> Print
+            </button>
+            <button class="surat-btn surat-btn-exit-fullscreen" onclick="exitFullscreen()" title="Keluar Fullscreen">
+                <i class="fa-solid fa-compress"></i> Keluar Fullscreen
+            </button>
+        </div>
+    `;
+    
+    // Buat content area untuk center dokumen
+    const fullscreenContent = document.createElement('div');
+    fullscreenContent.className = 'fullscreen-content';
+    
+    // Buat document container dengan batas lebar (DIKURANGI menjadi 1000px)
+    const documentContainer = document.createElement('div');
+    documentContainer.className = 'fullscreen-document-container';
+    
+    // Buat container iframe fullscreen
+    const iframeContainer = document.createElement('div');
+    iframeContainer.className = 'fullscreen-iframe-container';
+    
+    // Clone iframe dan atur untuk fullscreen
+    const fullscreenIframe = iframe.cloneNode(true);
+    fullscreenIframe.className = 'fullscreen-iframe';
+    fullscreenIframe.style.width = '100%';
+    fullscreenIframe.style.height = '100%';
+    fullscreenIframe.style.border = 'none';
+    
+    // Tambahkan ke DOM
+    iframeContainer.appendChild(fullscreenIframe);
+    documentContainer.appendChild(iframeContainer);
+    fullscreenContent.appendChild(documentContainer);
+    fullscreenContainer.appendChild(fullscreenHeader);
+    fullscreenContainer.appendChild(fullscreenContent);
+    document.body.appendChild(fullscreenContainer);
+    
+    // Set status fullscreen
+    isFullscreen = true;
+    
+    // Sembunyikan modal asli
+    if (modal) {
+        modal.style.display = 'none';
+    }
+    
+    // Simpan referensi untuk nanti
+    fullscreenContainer._originalModalId = modalId;
+    fullscreenContainer._originalIframe = iframe;
+    
+    // Tambahkan event listener untuk tombol keluar fullscreen - DIPERBAIKI
+    const exitFullscreenBtn = fullscreenHeader.querySelector('.surat-btn-exit-fullscreen');
+    if (exitFullscreenBtn) {
+        exitFullscreenBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            exitFullscreen();
+        });
+    }
+    
+    // Tambahkan event listener untuk ESC
+    document.addEventListener('keydown', handleFullscreenEscape);
+    
+    // Adjust iframe height setelah dimuat
+    setTimeout(() => {
+        adjustFullscreenIframeHeight(fullscreenIframe);
+    }, 1000);
+}
+
+// Keluar dari mode fullscreen - DIPERBAIKI
+function exitFullscreen() {
+    if (!fullscreenContainer || !isFullscreen) return;
+    
+    // Hapus event listener
+    document.removeEventListener('keydown', handleFullscreenEscape);
+    
+    // Tampilkan kembali modal asli
+    const modalId = fullscreenContainer._originalModalId;
+    if (modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.style.display = 'flex';
+        }
+    }
+    
+    // Hapus container fullscreen
+    if (fullscreenContainer.parentNode) {
+        fullscreenContainer.parentNode.removeChild(fullscreenContainer);
+    }
+    
+    // Reset status
+    isFullscreen = false;
+    fullscreenContainer = null;
+}
+
+// Handle ESC key untuk keluar fullscreen
+function handleFullscreenEscape(e) {
+    if (e.key === 'Escape' && isFullscreen) {
+        exitFullscreen();
+    }
+}
+
+// Adjust iframe height untuk fullscreen
+function adjustFullscreenIframeHeight(iframe) {
+    if (!iframe) return;
+    
+    try {
+        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+        const body = iframeDoc.body;
+        const html = iframeDoc.documentElement;
+        
+        // Hitung tinggi konten
+        const height = Math.max(
+            body.scrollHeight,
+            body.offsetHeight,
+            html.clientHeight,
+            html.scrollHeight,
+            html.offsetHeight
+        );
+        
+        // Set tinggi minimum
+        const minHeight = window.innerHeight - 200; // Kurangi untuk header
+        const calculatedHeight = Math.max(minHeight, height);
+        
+        iframe.style.minHeight = calculatedHeight + 'px';
+        
+        // Scroll ke atas
+        iframe.contentWindow.scrollTo(0, 0);
+        
+    } catch (e) {
+        console.error('Error adjusting fullscreen iframe height:', e);
+        // Fallback: set tinggi tetap
+        iframe.style.minHeight = 'calc(100vh - 150px)';
+    }
 }
 
 // ============================================
@@ -2928,38 +3728,11 @@ function showUnsupportedPreview(previewBody, fileUrl, fileName) {
     `;
 }
 
-// Fungsi untuk toggle fullscreen pada iframe - DIUBAH
-function toggleIframeFullscreen(iframe) {
-    if (!isFullscreen) {
-        iframe.classList.add('fullscreen');
-        isFullscreen = true;
-        
-        // Update fullscreen button text
-        const fullscreenBtn = document.querySelector('.surat-btn-fullscreen');
-        if (fullscreenBtn) {
-            fullscreenBtn.innerHTML = '<i class="fa-solid fa-compress"></i> Keluar Fullscreen';
-            fullscreenBtn.title = 'Keluar Fullscreen';
-        }
-        
-        // Hide other elements
-        document.querySelector('.surat-preview-header').style.display = 'none';
-    } else {
-        iframe.classList.remove('fullscreen');
-        isFullscreen = false;
-        
-        // Update fullscreen button text
-        const fullscreenBtn = document.querySelector('.surat-btn-fullscreen');
-        if (fullscreenBtn) {
-            fullscreenBtn.innerHTML = '<i class="fa-solid fa-expand"></i> Fullscreen';
-            fullscreenBtn.title = 'Fullscreen';
-        }
-        
-        // Show header again
-        document.querySelector('.surat-preview-header').style.display = 'flex';
-    }
-}
+// ============================================
+// FUNGSI LAINNYA
+// ============================================
 
-// Fungsi untuk menyesuaikan tinggi iframe - DIUBAH
+// Fungsi untuk menyesuaikan tinggi iframe
 function adjustIframeHeight(iframe) {
     if (!iframe) return;
     
@@ -3489,11 +4262,8 @@ document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape' && modalManager.modals.length > 0) {
         // Jika dalam mode fullscreen, keluar dulu
         if (isFullscreen) {
-            const iframe = document.querySelector('.surat-iframe.fullscreen');
-            if (iframe) {
-                toggleIframeFullscreen(iframe);
-                return;
-            }
+            exitFullscreen();
+            return;
         }
         modalManager.closeModal(modalManager.modals[modalManager.modals.length - 1].id);
     }

@@ -499,16 +499,18 @@
     }
     
     /* ============================================
-       SURAT MODAL STYLES - LEBAR MAKSIMAL LEBIH BESAR
+       SURAT MODAL STYLES - DITAMBAHKAN FULLSCREEN SEPERTI TOTAL
     ============================================ */
     .surat-modal .modal-content {
         max-width: 1400px !important;
         width: 98% !important;
         max-height: 95vh !important;
         min-width: 1000px;
+        display: flex;
+        flex-direction: column;
     }
     
-    /* Container khusus untuk preview surat agar lebih lebar */
+    /* Container khusus untuk preview surat */
     .surat-preview-container {
         width: 100%;
         height: calc(95vh - 150px);
@@ -517,89 +519,208 @@
         background: #f8f9fa;
         border-radius: 10px;
         overflow: hidden;
+        position: relative;
     }
     
     /* Header untuk surat preview */
     .surat-preview-header {
-        background: #f8f9fa;
-        padding: 15px 20px;
-        border-bottom: 1px solid #e9ecef;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        padding: 18px 25px;
+        border-bottom: 2px solid #e9ecef;
         display: flex;
         justify-content: space-between;
         align-items: center;
         flex-shrink: 0;
+        z-index: 10;
     }
     
     /* Toolbar untuk tombol download/print */
     .surat-toolbar {
         display: flex;
-        gap: 10px;
+        gap: 12px;
         align-items: center;
+    }
+    
+    /* Container untuk iframe dengan scrollbar */
+    .surat-iframe-container {
+        flex: 1;
+        overflow: auto;
+        background: white;
+        position: relative;
+        padding: 30px;
     }
     
     /* Iframe untuk surat */
     .surat-iframe {
         width: 100%;
-        height: 100%;
+        min-height: 100%;
         border: none;
-        flex: 1;
+        display: block;
         background: white;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        border-radius: 8px;
     }
     
-    /* Style khusus untuk tombol dalam surat modal */
+    /* Style scrollbar untuk container iframe */
+    .surat-iframe-container::-webkit-scrollbar {
+        width: 12px;
+        height: 12px;
+    }
+    
+    .surat-iframe-container::-webkit-scrollbar-track {
+        background: #f8f9fa;
+        border-radius: 6px;
+    }
+    
+    .surat-iframe-container::-webkit-scrollbar-thumb {
+        background: #FB8C00;
+        border-radius: 6px;
+        border: 3px solid #f8f9fa;
+    }
+    
+    .surat-iframe-container::-webkit-scrollbar-thumb:hover {
+        background: #E67E22;
+    }
+    
+    /* ============================================
+       FULLSCREEN STYLES - SAMA SEPERTI TOTAL (PERBAIKAN: UKURAN LEBIH SEMPIT DAN RAPIH)
+    ============================================ */
+    /* Fullscreen container */
+    .fullscreen-container {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        z-index: 99999 !important;
+        background: rgba(0, 0, 0, 0.9) !important;
+        display: flex !important;
+        flex-direction: column !important;
+        overflow: hidden !important;
+    }
+    
+    /* Fullscreen header */
+    .fullscreen-header {
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        color: white;
+        padding: 12px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-shrink: 0;
+        z-index: 100000;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+    
+    /* Fullscreen content area - TAMBAHKAN MAX-WIDTH DAN CENTER */
+    .fullscreen-content {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: auto;
+        padding: 20px;
+        position: relative;
+    }
+    
+    /* Fullscreen document container - BATASI LEBAR MAKSIMAL (DIPERKECIL) */
+    .fullscreen-document-container {
+        max-width: 1000px; /* DIKURANGI dari 1200px menjadi 1000px */
+        width: 100%;
+        background: white;
+        box-shadow: 0 5px 30px rgba(0,0,0,0.3);
+        border-radius: 8px;
+        overflow: hidden;
+        position: relative;
+        min-height: calc(100vh - 100px);
+        max-height: calc(100vh - 100px);
+    }
+    
+    /* Fullscreen iframe container */
+    .fullscreen-iframe-container {
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background: white;
+        position: relative;
+    }
+    
+    /* Fullscreen iframe - DIBATASI DAN DI-CENTER */
+    .fullscreen-iframe {
+        width: 100%;
+        min-height: 100%;
+        border: none;
+        display: block;
+        background: white;
+        padding: 30px; /* DIPERKECIL dari 40px */
+        box-sizing: border-box;
+    }
+    
+    /* Tombol surat dengan spacing yang lebih baik */
     .surat-btn {
-        padding: 10px 20px;
+        padding: 8px 16px;
         border-radius: 6px;
         border: none;
         cursor: pointer;
         font-weight: 600;
-        font-size: 14px;
+        font-size: 13px;
         display: inline-flex;
         align-items: center;
-        gap: 8px;
+        gap: 6px;
         transition: all 0.2s;
         text-decoration: none !important;
+        min-width: auto;
+        justify-content: center;
     }
     
     .surat-btn-download {
-        background: #8E44AD;
+        background: linear-gradient(135deg, #FB8C00 0%, #F57C00 100%);
         color: white;
+        box-shadow: 0 2px 5px rgba(251, 140, 0, 0.3);
     }
     
     .surat-btn-download:hover {
-        background: #7D3C98;
+        background: linear-gradient(135deg, #E67E22 0%, #EF6C00 100%);
         transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(251, 140, 0, 0.4);
     }
     
     .surat-btn-print {
-        background: #2c3e50;
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
         color: white;
+        box-shadow: 0 2px 5px rgba(44, 62, 80, 0.3);
     }
     
     .surat-btn-print:hover {
-        background: #1a252f;
+        background: linear-gradient(135deg, #1a252f 0%, #2c3e50 100%);
         transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(44, 62, 80, 0.4);
     }
     
     .surat-btn-fullscreen {
-        background: #3498db;
+        background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
         color: white;
+        box-shadow: 0 2px 5px rgba(52, 152, 219, 0.3);
     }
     
     .surat-btn-fullscreen:hover {
-        background: #2980b9;
+        background: linear-gradient(135deg, #2980b9 0%, #1c6ea4 100%);
         transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(52, 152, 219, 0.4);
     }
     
-    /* Fullscreen mode untuk surat */
-    .surat-iframe.fullscreen {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        z-index: 9999;
-        background: white;
+    /* TOMBOL KELUAR FULLSCREEN YANG DIREVISI */
+    .surat-btn-exit-fullscreen {
+        background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        color: white;
+        box-shadow: 0 2px 5px rgba(231, 76, 60, 0.3);
+        cursor: pointer !important;
+    }
+    
+    .surat-btn-exit-fullscreen:hover {
+        background: linear-gradient(135deg, #c0392b 0%, #a93226 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(231, 76, 60, 0.4);
     }
     
     /* Eviden Modal Styles */
@@ -623,6 +744,12 @@
         .surat-modal .modal-content {
             max-width: 95% !important;
             min-width: auto !important;
+        }
+        
+        /* Responsive untuk fullscreen */
+        .fullscreen-document-container {
+            max-width: 95%;
+            margin: 0 20px;
         }
     }
     
@@ -673,7 +800,7 @@
             content: attr(data-label);
             float: left;
             font-weight: bold;
-                text-transform: uppercase;
+            text-transform: uppercase;
             font-size: 12px;
             color: #7f8c8d;
         }
@@ -701,6 +828,17 @@
         .surat-btn {
             padding: 8px 15px;
             font-size: 13px;
+        }
+        
+        /* Fullscreen responsive */
+        .fullscreen-document-container {
+            max-width: 100%;
+            margin: 0 10px;
+            border-radius: 0;
+        }
+        
+        .fullscreen-iframe {
+            padding: 20px;
         }
     }
     
@@ -767,280 +905,79 @@
             top: 10px;
             max-width: calc(100% - 20px);
         }
+        
+        /* Fullscreen di mobile */
+        .fullscreen-content {
+            padding: 10px;
+        }
+        
+        .fullscreen-document-container {
+            max-width: 100% !important;
+            margin: 0 5px !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+            min-height: calc(100vh - 80px) !important;
+            max-height: calc(100vh - 80px) !important;
+        }
+        
+        .fullscreen-iframe {
+            padding: 15px !important;
+        }
+        
+        .fullscreen-header {
+            padding: 10px 15px !important;
+        }
+        
+        .surat-btn {
+            padding: 6px 10px !important;
+            font-size: 11px !important;
+        }
     }
-    /* ============================================
-   SURAT MODAL STYLES - PERBAIKAN UNTUK SCROLLBAR
-============================================ */
-.surat-modal .modal-content {
-    max-width: 1400px !important;
-    width: 98% !important;
-    max-height: 95vh !important;
-    min-width: 1000px;
+    /* Fullscreen content area - TAMBAHKAN OVERFLOW AUTO */
+.fullscreen-content {
+    flex: 1;
     display: flex;
-    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start; /* Ubah dari center ke flex-start */
+    overflow: auto; /* PERBAIKAN: Tambahkan overflow auto */
+    padding: 20px;
+    position: relative;
+    width: 100%;
 }
 
-/* Container khusus untuk preview surat dengan scrollbar */
-.surat-preview-container {
+/* Fullscreen document container - DAPAT DISCROLL */
+.fullscreen-document-container {
+    max-width: 1000px;
     width: 100%;
-    height: calc(95vh - 150px);
-    display: flex;
-    flex-direction: column;
-    background: #f8f9fa;
-    border-radius: 10px;
+    background: white;
+    box-shadow: 0 5px 30px rgba(0,0,0,0.3);
+    border-radius: 8px;
     overflow: hidden;
     position: relative;
+    min-height: auto; /* Ubah dari min-height tetap */
+    max-height: none; /* Hapus max-height tetap */
+    margin: 0 auto; /* Center container */
 }
 
-/* Header untuk surat preview */
-.surat-preview-header {
-    background: #f8f9fa;
-    padding: 15px 20px;
-    border-bottom: 1px solid #e9ecef;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-shrink: 0;
-    z-index: 10;
-}
-
-/* Toolbar untuk tombol download/print */
-.surat-toolbar {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-
-/* Container untuk iframe dengan scrollbar */
-.surat-iframe-container {
-    flex: 1;
-    overflow: auto;
-    background: white;
-    position: relative;
-}
-
-/* Iframe untuk surat - DIPERBAIKI untuk scroll */
-.surat-iframe {
-    width: 100%;
-    min-height: 100%;
-    border: none;
-    display: block;
-    background: white;
-}
-
-/* Style scrollbar untuk container iframe */
-.surat-iframe-container::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
-}
-
-.surat-iframe-container::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 5px;
-}
-
-.surat-iframe-container::-webkit-scrollbar-thumb {
-    background: #FB8C00;
-    border-radius: 5px;
-}
-
-.surat-iframe-container::-webkit-scrollbar-thumb:hover {
-    background: #E67E22;
-}
-
-/* Fullscreen mode untuk surat */
-.surat-iframe.fullscreen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: 9999;
-    background: white;
-}
-
-/* Style untuk detail content dalam modal surat */
-.surat-modal .detail-content {
-    padding: 0 !important;
-    overflow: hidden;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-}
-/* ============================================
-   SURAT MODAL STYLES - PERBAIKAN JARAK KE TEPI
-============================================ */
-.surat-modal .modal-content {
-    max-width: 1400px !important;
-    width: 98% !important;
-    max-height: 95vh !important;
-    min-width: 1000px;
-    display: flex;
-    flex-direction: column;
-}
-
-/* Container untuk konten surat dengan padding */
-.surat-content-wrapper {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    padding: 20px; /* Tambahkan padding di sini */
-}
-
-/* Container khusus untuk preview surat dengan scrollbar */
-.surat-preview-container {
+/* Fullscreen iframe container - TAMBAHKAN OVERFLOW AUTO */
+.fullscreen-iframe-container {
     width: 100%;
     height: 100%;
-    display: flex;
-    flex-direction: column;
-    background: #f8f9fa;
-    border-radius: 12px;
-    overflow: hidden;
-    position: relative;
-    border: 1px solid #e9ecef;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-/* Header untuk surat preview */
-.surat-preview-header {
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    padding: 18px 25px;
-    border-bottom: 2px solid #e9ecef;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-shrink: 0;
-    z-index: 10;
-}
-
-/* Toolbar untuk tombol download/print */
-.surat-toolbar {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-}
-
-/* Container untuk iframe dengan scrollbar dan padding */
-.surat-iframe-container {
-    flex: 1;
-    overflow: auto;
+    overflow: auto; /* PERBAIKAN: Tambahkan overflow auto */
     background: white;
     position: relative;
-    padding: 30px; /* TAMBAHKAN PADDING DI SINI */
 }
 
-/* Iframe untuk surat - DIPERBAIKI untuk scroll dengan margin */
-.surat-iframe {
+/* Fullscreen iframe - HAPUS MIN-HEIGHT 100% DAN PADDING BESAR */
+.fullscreen-iframe {
     width: 100%;
-    min-height: 100%;
+    min-height: auto; /* Ubah dari 100% ke auto */
     border: none;
     display: block;
     background: white;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    border-radius: 8px; /* Tambahkan border radius */
-}
-
-/* Styling untuk konten dalam iframe */
-.surat-iframe body {
-    margin: 0;
-    padding: 40px !important; /* Beri padding pada konten surat */
-    font-family: 'Times New Roman', Times, serif;
-    background: white;
-}
-
-/* Style scrollbar untuk container iframe */
-.surat-iframe-container::-webkit-scrollbar {
-    width: 12px;
-    height: 12px;
-}
-
-.surat-iframe-container::-webkit-scrollbar-track {
-    background: #f8f9fa;
-    border-radius: 6px;
-}
-
-.surat-iframe-container::-webkit-scrollbar-thumb {
-    background: #FB8C00;
-    border-radius: 6px;
-    border: 3px solid #f8f9fa;
-}
-
-.surat-iframe-container::-webkit-scrollbar-thumb:hover {
-    background: #E67E22;
-}
-
-/* Fullscreen mode untuk surat */
-.surat-iframe.fullscreen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: 9999;
-    background: white;
-    padding: 40px; /* Padding saat fullscreen */
-}
-
-/* Style untuk detail content dalam modal surat */
-.surat-modal .detail-content {
-    padding: 0 !important;
-    overflow: hidden;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-/* Tombol surat dengan spacing yang lebih baik */
-.surat-btn {
-    padding: 10px 20px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 14px;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    transition: all 0.2s;
-    text-decoration: none !important;
-    min-width: 110px;
-    justify-content: center;
-}
-
-.surat-btn-download {
-    background: linear-gradient(135deg, #FB8C00 0%, #F57C00 100%);
-    color: white;
-    box-shadow: 0 2px 5px rgba(251, 140, 0, 0.3);
-}
-
-.surat-btn-download:hover {
-    background: linear-gradient(135deg, #E67E22 0%, #EF6C00 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(251, 140, 0, 0.4);
-}
-
-.surat-btn-print {
-    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-    color: white;
-    box-shadow: 0 2px 5px rgba(44, 62, 80, 0.3);
-}
-
-.surat-btn-print:hover {
-    background: linear-gradient(135deg, #1a252f 0%, #2c3e50 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(44, 62, 80, 0.4);
-}
-
-.surat-btn-fullscreen {
-    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
-    color: white;
-    box-shadow: 0 2px 5px rgba(52, 152, 219, 0.3);
-}
-
-.surat-btn-fullscreen:hover {
-    background: linear-gradient(135deg, #2980b9 0%, #1c6ea4 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(52, 152, 219, 0.4);
+    padding: 30px; /* DIPERKECIL dari 40px */
+    box-sizing: border-box;
+    overflow-y: visible !important; /* Pastikan bisa discroll */
 }
 </style>
 </head>
@@ -1364,6 +1301,7 @@ let currentReturnNamaKegiatan = null;
 let selectedSurat = null;
 let currentSuratPdfUrl = '';
 let isFullscreen = false;
+let fullscreenContainer = null;
 
 // PERBAIKAN: Fungsi untuk menampilkan alert
 function showAlert(message, type = 'warning') {
@@ -1533,7 +1471,7 @@ class ModalManager {
         return template.content.cloneNode(true).querySelector('.modal-content').outerHTML;
     }
 
-    // Create surat modal
+    // Create surat modal - SAMA SEPERTI TOTAL
     createSuratModal(data) {
         const template = document.getElementById('suratModalTemplate');
         const content = template.content.cloneNode(true);
@@ -1685,20 +1623,22 @@ class ModalManager {
         }
     }
 
-    // Attach surat modal listeners
+    // Attach surat modal listeners - DITAMBAHKAN FITUR FULLSCREEN SEPERTI TOTAL
     attachSuratModalListeners(modalElement, modalId, data) {
         // Load surat content if data provided
         if (data.suratId) {
             this.loadSuratContent(modalElement, data.suratId);
         }
         
-        // Setup fullscreen toggle button
+        // Setup fullscreen toggle button - DIPERBAIKI SAMA SEPERTI TOTAL
         const fullscreenBtn = modalElement.querySelector('.surat-btn-fullscreen');
         if (fullscreenBtn) {
-            fullscreenBtn.addEventListener('click', () => {
+            fullscreenBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
                 const iframe = modalElement.querySelector('.surat-iframe');
                 if (iframe) {
-                    toggleIframeFullscreen(iframe);
+                    toggleFullscreen(iframe);
                 }
             });
         }
@@ -1783,7 +1723,7 @@ class ModalManager {
         }
     }
 
-    // Load surat content
+    // Load surat content - DITAMBAHKAN FITUR FULLSCREEN SEPERTI TOTAL
     async loadSuratContent(modalElement, suratId) {
         try {
             const iframe = modalElement.querySelector('.surat-iframe');
@@ -1970,6 +1910,175 @@ function showReturnModal(id, namaKegiatan) {
 }
 
 // ============================================
+// FUNGSI FULLSCREEN YANG DIPERBAIKI - SAMA SEPERTI TOTAL
+// ============================================
+
+// Fungsi untuk toggle fullscreen pada iframe - VERSI DIPERBAIKI SAMA SEPERTI TOTAL
+function toggleFullscreen(iframe) {
+    if (!isFullscreen) {
+        enterFullscreen(iframe);
+    } else {
+        exitFullscreen();
+    }
+}
+
+// Masuk ke mode fullscreen
+function enterFullscreen(iframe) {
+    // Simpan modal asli
+    const modal = iframe.closest('.modal-item');
+    const modalId = modal ? modal.id : null;
+    
+    // Buat container fullscreen baru
+    fullscreenContainer = document.createElement('div');
+    fullscreenContainer.className = 'fullscreen-container';
+    fullscreenContainer.id = 'fullscreenContainer';
+    
+    // Buat header fullscreen
+    const fullscreenHeader = document.createElement('div');
+    fullscreenHeader.className = 'fullscreen-header';
+    fullscreenHeader.innerHTML = `
+        <div style="font-weight:600;color:white;font-size:16px">
+            <i class="fa-solid fa-file-contract"></i> Preview Surat Tugas - Mode Fullscreen
+        </div>
+        <div class="surat-toolbar">
+            <button class="surat-btn surat-btn-download" onclick="downloadPDF('${currentSuratPdfUrl}')" title="Download PDF">
+                <i class="fa-solid fa-download"></i> Download
+            </button>
+            <button class="surat-btn surat-btn-print" onclick="printPDF('${currentSuratPdfUrl}')" title="Print Surat">
+                <i class="fa-solid fa-print"></i> Print
+            </button>
+            <button class="surat-btn surat-btn-exit-fullscreen" onclick="exitFullscreen()" title="Keluar Fullscreen">
+                <i class="fa-solid fa-compress"></i> Keluar Fullscreen
+            </button>
+        </div>
+    `;
+    
+    // Buat content area untuk center dokumen
+    const fullscreenContent = document.createElement('div');
+    fullscreenContent.className = 'fullscreen-content';
+    
+    // Buat document container dengan batas lebar (DIKURANGI menjadi 1000px)
+    const documentContainer = document.createElement('div');
+    documentContainer.className = 'fullscreen-document-container';
+    
+    // Buat container iframe fullscreen
+    const iframeContainer = document.createElement('div');
+    iframeContainer.className = 'fullscreen-iframe-container';
+    
+    // Clone iframe dan atur untuk fullscreen
+    const fullscreenIframe = iframe.cloneNode(true);
+    fullscreenIframe.className = 'fullscreen-iframe';
+    fullscreenIframe.style.width = '100%';
+    fullscreenIframe.style.height = '100%';
+    fullscreenIframe.style.border = 'none';
+    
+    // Tambahkan ke DOM
+    iframeContainer.appendChild(fullscreenIframe);
+    documentContainer.appendChild(iframeContainer);
+    fullscreenContent.appendChild(documentContainer);
+    fullscreenContainer.appendChild(fullscreenHeader);
+    fullscreenContainer.appendChild(fullscreenContent);
+    document.body.appendChild(fullscreenContainer);
+    
+    // Set status fullscreen
+    isFullscreen = true;
+    
+    // Sembunyikan modal asli
+    if (modal) {
+        modal.style.display = 'none';
+    }
+    
+    // Simpan referensi untuk nanti
+    fullscreenContainer._originalModalId = modalId;
+    fullscreenContainer._originalIframe = iframe;
+    
+    // Tambahkan event listener untuk tombol keluar fullscreen - DIPERBAIKI
+    const exitFullscreenBtn = fullscreenHeader.querySelector('.surat-btn-exit-fullscreen');
+    if (exitFullscreenBtn) {
+        exitFullscreenBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            exitFullscreen();
+        });
+    }
+    
+    // Tambahkan event listener untuk ESC
+    document.addEventListener('keydown', handleFullscreenEscape);
+    
+    // Adjust iframe height setelah dimuat
+    setTimeout(() => {
+        adjustFullscreenIframeHeight(fullscreenIframe);
+    }, 1000);
+}
+
+// Keluar dari mode fullscreen - DIPERBAIKI
+function exitFullscreen() {
+    if (!fullscreenContainer || !isFullscreen) return;
+    
+    // Hapus event listener
+    document.removeEventListener('keydown', handleFullscreenEscape);
+    
+    // Tampilkan kembali modal asli
+    const modalId = fullscreenContainer._originalModalId;
+    if (modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.style.display = 'flex';
+        }
+    }
+    
+    // Hapus container fullscreen
+    if (fullscreenContainer.parentNode) {
+        fullscreenContainer.parentNode.removeChild(fullscreenContainer);
+    }
+    
+    // Reset status
+    isFullscreen = false;
+    fullscreenContainer = null;
+}
+
+// Handle ESC key untuk keluar fullscreen
+function handleFullscreenEscape(e) {
+    if (e.key === 'Escape' && isFullscreen) {
+        exitFullscreen();
+    }
+}
+
+// Adjust iframe height untuk fullscreen
+function adjustFullscreenIframeHeight(iframe) {
+    if (!iframe) return;
+    
+    try {
+        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+        const body = iframeDoc.body;
+        const html = iframeDoc.documentElement;
+        
+        // Hitung tinggi konten
+        const height = Math.max(
+            body.scrollHeight,
+            body.offsetHeight,
+            html.clientHeight,
+            html.scrollHeight,
+            html.offsetHeight
+        );
+        
+        // Set tinggi minimum
+        const minHeight = window.innerHeight - 200; // Kurangi untuk header
+        const calculatedHeight = Math.max(minHeight, height);
+        
+        iframe.style.minHeight = calculatedHeight + 'px';
+        
+        // Scroll ke atas
+        iframe.contentWindow.scrollTo(0, 0);
+        
+    } catch (e) {
+        console.error('Error adjusting fullscreen iframe height:', e);
+        // Fallback: set tinggi tetap
+        iframe.style.minHeight = 'calc(100vh - 150px)';
+    }
+}
+
+// ============================================
 // FUNGSI PREVIEW FILE
 // ============================================
 
@@ -2042,38 +2151,11 @@ function showUnsupportedPreview(previewBody, fileUrl, fileName) {
     `;
 }
 
-// Fungsi untuk toggle fullscreen pada iframe - DIUBAH
-function toggleIframeFullscreen(iframe) {
-    if (!isFullscreen) {
-        iframe.classList.add('fullscreen');
-        isFullscreen = true;
-        
-        // Update fullscreen button text
-        const fullscreenBtn = document.querySelector('.surat-btn-fullscreen');
-        if (fullscreenBtn) {
-            fullscreenBtn.innerHTML = '<i class="fa-solid fa-compress"></i> Keluar Fullscreen';
-            fullscreenBtn.title = 'Keluar Fullscreen';
-        }
-        
-        // Hide other elements
-        document.querySelector('.surat-preview-header').style.display = 'none';
-    } else {
-        iframe.classList.remove('fullscreen');
-        isFullscreen = false;
-        
-        // Update fullscreen button text
-        const fullscreenBtn = document.querySelector('.surat-btn-fullscreen');
-        if (fullscreenBtn) {
-            fullscreenBtn.innerHTML = '<i class="fa-solid fa-expand"></i> Fullscreen';
-            fullscreenBtn.title = 'Fullscreen';
-        }
-        
-        // Show header again
-        document.querySelector('.surat-preview-header').style.display = 'flex';
-    }
-}
+// ============================================
+// FUNGSI LAINNYA
+// ============================================
 
-// Fungsi untuk menyesuaikan tinggi iframe - DIUBAH
+// Fungsi untuk menyesuaikan tinggi iframe
 function adjustIframeHeight(iframe) {
     if (!iframe) return;
     
@@ -2601,11 +2683,8 @@ document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape' && modalManager.modals.length > 0) {
         // Jika dalam mode fullscreen, keluar dulu
         if (isFullscreen) {
-            const iframe = document.querySelector('.surat-iframe.fullscreen');
-            if (iframe) {
-                toggleIframeFullscreen(iframe);
-                return;
-            }
+            exitFullscreen();
+            return;
         }
         modalManager.closeModal(modalManager.modals[modalManager.modals.length - 1].id);
     }
